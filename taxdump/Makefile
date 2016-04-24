@@ -1,5 +1,5 @@
 all: md5sum
-	mkdir -p taxdump && tar zxf taxdump.tar.gz -C ./taxdump
+	rm -rfv taxdump && mkdir -p taxdump && tar zxf taxdump.tar.gz -C ./taxdump
 
 .PHONY: .FORCE
 
