@@ -13,7 +13,7 @@ git clone git@github.com:zyxue/ncbitax2lin.git
 ```
 
 
-### Regenerate `lineages.csv``
+### Regenerate `lineages.csv.gz`
 
 First, make sure you're in a proper py27 virtual environment with pandas. Then,
 
