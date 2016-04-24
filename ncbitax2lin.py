@@ -218,7 +218,7 @@ def main():
                              if __ not in cols])
         output_cols = cols + other_cols
         lineages_df.to_csv(opf_gz, index=False, columns=output_cols)
-
+        opf_gz.close()
 
 if __name__ == "__main__":
     main()
