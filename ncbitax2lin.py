@@ -148,7 +148,8 @@ def main():
     df = df[['tax_id', 'parent_tax_id', 'rank', 'name_txt']]
     df.reset_index(drop=True, inplace=True)
     logging.info('# of tax ids: {0}'.format(df.shape[0]))
-    logging.info('# df.info: {0}'.format(df.info()))
+    # log summary info about the dataframe
+    df.info()
 
     # force to use global variable TAXONOMY_DICT because map doesn't allow
     # passing extra args easily
