@@ -48,4 +48,4 @@ def backup_file(f):
         os.rename(f, rn_to)
         return rn_to
     else:
-        return f
+        logging.warning('{0} doesn\'t exist'.format(f))
