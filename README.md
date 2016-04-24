@@ -1,7 +1,7 @@
 # NCBItax2lin
 
-Convert NCBI taxonomy ([taxdump](ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/)) into
-lineages.
+Convert NCBI taxonomy dump (taxdump, ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/)
+into lineages.
 
 ## Install
 
@@ -52,9 +52,10 @@ tax_id,superkingdom,phylum,class,order,family,genus,species,family1,forma,infrac
 ```
 
 
-### About [taxdump](ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/)
+### About taxdump
 
-It appears that NCBI periodically regenerates `taxdump.tar.gz` and
-`taxdump.tar.gz.md5` even though that its content are being the same. Not sure
-how the regeneration works, but that `taxdump.tar.gz.md5` is different could
-simply be due to different timestamp.
+The taxdump is available at ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/. It appears
+that NCBI periodically regenerates `taxdump.tar.gz` and `taxdump.tar.gz.md5`
+even though that its content are being the same. Not sure how the regeneration
+works, but that `taxdump.tar.gz.md5` is different could simply be due to
+different timestamp.
