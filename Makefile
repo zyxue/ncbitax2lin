@@ -8,3 +8,7 @@ ncbitax2lin: taxdump
 
 taxdump: .FORCE
 	$(MAKE) -C taxdump all
+
+
+clean:
+	rm -fv *#
