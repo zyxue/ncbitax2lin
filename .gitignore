@@ -2,3 +2,6 @@
 
 # virtualenv
 venv*
+
+taxdump/taxdump.tar.gz
+taxdump/taxdump.tar.gz.md5
