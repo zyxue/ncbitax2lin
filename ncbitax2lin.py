@@ -196,7 +196,9 @@ def main():
     lineages_csv_output = os.path.join('{0}.csv.gz'.format(args.output_prefix))
     backup_file(lineages_csv_output)
     logging.info("writing lineages to {0}".format(lineages_csv_output))
-    with gzip.open(lineages_csv_output, 'wb') as opf:
+    with open(lineages_csv_output, 'wb') as opf:
+        # make sure the name and timestamp are not gzipped, (like gzip -n)
+        opf_gz = gzip.GzipFile('', 'wb', 9, opf, 0.)
         cols = ['tax_id',
                 'superkingdom',
                 'phylum',
@@ -209,7 +211,7 @@ def main():
         other_cols = sorted([__ for __ in lineages_df.columns
                              if __ not in cols])
         output_cols = cols + other_cols
-        lineages_df.to_csv(opf, index=False, columns=output_cols)
+        lineages_df.to_csv(opf_gz, index=False, columns=output_cols)
 
 
 if __name__ == "__main__":
