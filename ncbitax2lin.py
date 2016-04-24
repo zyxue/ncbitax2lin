@@ -1,7 +1,6 @@
 import re
 import os
 import gzip
-import string
 import multiprocessing
 import argparse
 import logging
@@ -36,6 +35,13 @@ def parse_args():
     return args
 
 
+def strip(str_):
+    '''
+    :param str_: a string
+    '''
+    return str_.strip()
+
+
 @timeit
 def load_nodes(nodes_file):
     '''
@@ -59,9 +65,9 @@ def load_nodes(nodes_file):
                      ])
 
     # To get rid of flanking tab characters
-    df['rank'] = df['rank'].apply(string.strip)
-    df['embl_code'] = df['embl_code'].apply(string.strip)
-    df['comments'] = df['comments'].apply(string.strip)
+    df['rank'] = df['rank'].apply(strip)
+    df['embl_code'] = df['embl_code'].apply(strip)
+    df['comments'] = df['comments'].apply(strip)
     return df
 
 
@@ -77,9 +83,9 @@ def load_names(names_file):
                          'unique_name',
                          'name_class'
                      ])
-    df['name_txt'] = df['name_txt'].apply(string.strip)
-    df['unique_name'] = df['unique_name'].apply(string.strip)
-    df['name_class'] = df['name_class'].apply(string.strip)
+    df['name_txt'] = df['name_txt'].apply(strip)
+    df['unique_name'] = df['unique_name'].apply(strip)
+    df['name_class'] = df['name_class'].apply(strip)
 
     sci_df = df[df['name_class'] == 'scientific name']
     sci_df.reset_index(drop=True, inplace=True)
