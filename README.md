@@ -45,7 +45,7 @@ lineage information.
 
 Regeneration is straightforward, but it may incur quite a bit of memory (~20
 GB). I generated `lineages.csv.gz` on a machine with 32 GB memory. Pull request
-on refactoring to lower memory usage is welcome. It's mainly about this line
+on refactoring to a lower memory usage is welcome. It's mainly about this line
 `lineages_dd = pool.map(find_lineage, df.tax_id.values)`. If anything, you
 could notify me on github and I could regenerate it for you.
 
@@ -60,7 +60,7 @@ cd ncbitax2lin/
 
 Currently, it only works with `python2.7`, and needs
 [pandas](http://pandas.pydata.org/), so make sure you are in a proper virtual
-environment. If you have already these had one available already, just use that
+environment. If you have already these had one available, just use that
 one.
 
 Otherwise, you can create a new one with
