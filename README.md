@@ -34,8 +34,8 @@ tax_id,superkingdom,phylum,class,order,family,genus,species,family1,forma,infrac
 
 It appears that NCBI periodically regenerates `taxdump.tar.gz` and
 `taxdump.tar.gz.md5` even when its content is still the same. I am not sure how
-their regeneration works, but that `taxdump.tar.gz.md5` will different simply be
-due to a different timestamp.
+their regeneration works, but `taxdump.tar.gz.md5` will differ simply because 
+of a different timestamp.
 
 The included `lineage.csv.gz` could be outdated. I may regernate it once in a
 while, but you are encouraged to regenerate it to be ensured with all latest
@@ -46,7 +46,7 @@ lineage information.
 Regeneration is straightforward, but it may incur quite a bit of memory (~20
 GB). I generated `lineages.csv.gz` on a machine with 32 GB memory. Pull request
 on refactoring to lower memory usage is welcome. It's mainly about this line
-`lineages_dd = pool.map(find_lineage, df.tax_id.values) `. If anything, you
+`lineages_dd = pool.map(find_lineage, df.tax_id.values)`. If anything, you
 could notify me on github and I could regenerate it for you.
 
 ### Install
