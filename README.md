@@ -3,26 +3,66 @@
 Convert NCBI taxonomy dump (taxdump, ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/)
 into lineages.
 
-## Install
 
-It only works with `python2.7` currently, and needs
-[pandas](http://pandas.pydata.org/).
+## Introduction
+
+It appears that NCBI periodically regenerates `taxdump.tar.gz` and
+`taxdump.tar.gz.md5` even though that its content could still the same. Not sure
+how their regeneration works, but that `taxdump.tar.gz.md5` is different could
+simply be due to different timestamp. 
+
+The included lineage.csv.gz could be outdated. I may regernate it once in a
+while, but are encouraged to regenerate it be ensured to have all latest lineage
+information.
+
+## Regenerate `lineages.csv.gz`
+
+Regeneration is straightforward, but it may incur quite a bit of memory (~20
+GB). I generated `lineages.csv.gz` on a machine with 32 GB memory. Pull request
+on refactoring to lower memory usage is welcome. It's mainly about this line
+`lineages_dd = pool.map(find_lineage, df.tax_id.values) `.
+
+### Install
 
 ```
 git clone git@github.com:zyxue/ncbitax2lin.git
+cd ncbitax2lin/
 ```
 
+### Setting up virtual environment
 
-### Regenerate `lineages.csv.gz`
+Currently, it only works with `python2.7`, and needs
+[pandas](http://pandas.pydata.org/), so make sure you are in a proper virtual
+environment. If you have already these ingredients available already, just use
+that.
 
-First, make sure you're in a proper py27 virtual environment with pandas. Then,
+Otherwise, you can recreate a new virtual environment with
+[miniconda](https://conda.io/miniconda.html)/[anaconda](https://www.continuum.io/downloads)
+(recommended),
 
 ```
-cd ncbitax2lin
+conda create -y -p venv/ --file env-conda.txt
+# or effectively the same
+# conda create -y -p venv python=2 pandas
+source activate venv/
+```
+
+or with [virtualenv + pip](http://docs.python-guide.org/en/latest/dev/virtualenvs/)
+
+```
+virtualenv venv/
+source venv/bin/activate
+pip install -r env-pip.txt
+```
+
+Then run the following, this will download the latest taxdump from NCBI, run the
+script to regenerate all latest lineages from it
+
+``` 
 make
 ```
 
-### Sample records in `lineages.csv.gz`
+### Sample records in generated `lineages.csv.gz`
 
 Below are first 20 records in the generated linages.csv.gz ordered by taxonomy
 id (`tax_id`).
@@ -50,12 +90,3 @@ tax_id,superkingdom,phylum,class,order,family,genus,species,family1,forma,infrac
 24,Bacteria,Proteobacteria,Gammaproteobacteria,Alteromonadales,Shewanellaceae,Shewanella,Shewanella putrefaciens,,,,,,cellular organisms,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 25,Bacteria,Proteobacteria,Gammaproteobacteria,Alteromonadales,Shewanellaceae,Shewanella,Shewanella hanedai,,,,,,cellular organisms,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 ```
-
-
-### About taxdump
-
-The taxdump is available at ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/. It appears
-that NCBI periodically regenerates `taxdump.tar.gz` and `taxdump.tar.gz.md5`
-even though that its content are being the same. Not sure how the regeneration
-works, but that `taxdump.tar.gz.md5` is different could simply be due to
-different timestamp.
