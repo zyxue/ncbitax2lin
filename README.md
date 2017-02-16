@@ -30,10 +30,10 @@ tax_id,superkingdom,phylum,class,order,family,genus,species,family1,forma,genus1
 25,Bacteria,Proteobacteria,Gammaproteobacteria,Alteromonadales,Shewanellaceae,Shewanella,Shewanella hanedai,,,,,,,cellular organisms,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 ```
 
-The taxonomy IDs (`tax_id`) follow a hierarchical structure, everything can be
-traced back to a `tax_id` of 1, as seen at the first line. Similarly, everthing
-that's Bacteria are supposed to be traced back to a `tax_id` of 2, the second
-line, and so on and so forth.
+The taxonomy IDs (`tax_id`) follow a hierarchical structure, so everything can
+be traced back to a `tax_id` of 1, as seen at the first line. Similarly,
+everthing that's Bacteria is supposed to be traced back to a `tax_id` of 2, the
+second line, and so on and so forth.
 
 Another example with entries that involve *Homo sapiens* are
 
