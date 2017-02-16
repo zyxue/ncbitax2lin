@@ -43,6 +43,8 @@ $ zcat lineages.csv.gz | \grep -i 'homo sapiens'
 1573476,Eukaryota,Chordata,Mammalia,,,,Homo sapiens/Rattus norvegicus xenograft,,,,,,Metazoa,cellular organisms,Opisthokonta,Dipnotetrapodomorpha,Tetrapoda,Amniota,unclassified Mammalia,,,,,,,Eumetazoa,,,,Bilateria,Deuterostomia,Vertebrata,Gnathostomata,Teleostomi,Euteleostomi,Sarcopterygii,,,,,,,,,,Craniata,,,,,,,,,
 ```
 
+So it's not a just single entry. The taxonomoy is not big, but kind of complex, have fun!
+
 ## Introduction
 
 It appears that NCBI periodically regenerates `taxdump.tar.gz` and
