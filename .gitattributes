@@ -2,4 +2,4 @@ taxdump/taxdump/nodes.dmp filter=lfs diff=lfs merge=lfs -text
 taxdump/taxdump/names.dmp filter=lfs diff=lfs merge=lfs -text
 taxdump/taxdump/citations.dmp filter=lfs diff=lfs merge=lfs -text
 taxdump/taxdump/delnodes.dmp filter=lfs diff=lfs merge=lfs -text
-lineages.csv.gz filter=lfs diff=lfs merge=lfs -text
+
