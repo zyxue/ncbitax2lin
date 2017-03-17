@@ -1,73 +1,35 @@
 # NCBItax2lin
 
 Convert NCBI taxonomy dump (taxdump, ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/)
-into lineages.
+into lineages. An example for human is like
 
-Below are first 20 sample records in the generated `linages.csv.gz` ordered by
-taxonomy id (`tax_id`).
+| tax_id | superkingdom | phylum   | class    | order    | family    | genus | species      | family1 | forma | genus1 | infraclass | infraorder  | kingdom | no rank            | no rank1     | no rank10            | no rank11 | no rank12 | no rank13 | no rank14 | no rank15     | no rank16 | no rank17 | no rank18 | no rank19 | no rank2  | no rank20 | no rank21 | no rank22 | no rank3  | no rank4      | no rank5   | no rank6      | no rank7   | no rank8     | no rank9      | parvorder  | species group | species subgroup | species1 | subclass | subfamily | subgenus | subkingdom | suborder    | subphylum | subspecies | subtribe | superclass | superfamily | superorder       | superorder1 | superphylum | tribe | varietas |
+|--------|--------------|----------|----------|----------|-----------|-------|--------------|---------|-------|--------|------------|-------------|---------|--------------------|--------------|----------------------|-----------|-----------|-----------|-----------|---------------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|---------------|------------|---------------|------------|--------------|---------------|------------|---------------|------------------|----------|----------|-----------|----------|------------|-------------|-----------|------------|----------|------------|-------------|------------------|-------------|-------------|-------|----------|
+| 9606   | Eukaryota    | Chordata | Mammalia | Primates | Hominidae | Homo  | Homo sapiens |         |       |        |            | Simiiformes | Metazoa | cellular organisms | Opisthokonta | Dipnotetrapodomorpha | Tetrapoda | Amniota   | Theria    | Eutheria  | Boreoeutheria |           |           |           |           | Eumetazoa |           |           |           | Bilateria | Deuterostomia | Vertebrata | Gnathostomata | Teleostomi | Euteleostomi | Sarcopterygii | Catarrhini |               |                  |          |          | Homininae |          |            | Haplorrhini | Craniata  |            |          |            | Hominoidea  | Euarchontoglires |             |             |       |          |
 
-```
-$ zcat lineages.csv.gz | head -20
-tax_id,superkingdom,phylum,class,order,family,genus,species,family1,forma,genus1,infraclass,infraorder,kingdom,no rank,no rank1,no rank10,no rank11,no rank12,no rank13,no rank14,no rank15,no rank16,no rank17,no rank18,no rank19,no rank2,no rank20,no rank21,no rank22,no rank3,no rank4,no rank5,no rank6,no rank7,no rank8,no rank9,parvorder,species group,species subgroup,species1,subclass,subfamily,subgenus,subkingdom,suborder,subphylum,subspecies,subtribe,superclass,superfamily,superorder,superorder1,superphylum,tribe,varietas
-1,,,,,,,,,,,,,,root,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-2,Bacteria,,,,,,,,,,,,,cellular organisms,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-6,Bacteria,Proteobacteria,Alphaproteobacteria,Rhizobiales,Xanthobacteraceae,Azorhizobium,,,,,,,,cellular organisms,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-7,Bacteria,Proteobacteria,Alphaproteobacteria,Rhizobiales,Xanthobacteraceae,Azorhizobium,Azorhizobium caulinodans,,,,,,,cellular organisms,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-9,Bacteria,Proteobacteria,Gammaproteobacteria,Enterobacterales,Erwiniaceae,Buchnera,Buchnera aphidicola,,,,,,,cellular organisms,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-10,Bacteria,Proteobacteria,Gammaproteobacteria,Cellvibrionales,Cellvibrionaceae,Cellvibrio,,,,,,,,cellular organisms,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-11,Bacteria,Actinobacteria,Actinobacteria,Micrococcales,Cellulomonadaceae,Cellulomonas,Cellulomonas gilvus,,,,,,,cellular organisms,Terrabacteria group,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-13,Bacteria,Dictyoglomi,Dictyoglomia,Dictyoglomales,Dictyoglomaceae,Dictyoglomus,,,,,,,,cellular organisms,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-14,Bacteria,Dictyoglomi,Dictyoglomia,Dictyoglomales,Dictyoglomaceae,Dictyoglomus,Dictyoglomus thermophilum,,,,,,,cellular organisms,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-16,Bacteria,Proteobacteria,Betaproteobacteria,Methylophilales,Methylophilaceae,Methylophilus,,,,,,,,cellular organisms,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-17,Bacteria,Proteobacteria,Betaproteobacteria,Methylophilales,Methylophilaceae,Methylophilus,Methylophilus methylotrophus,,,,,,,cellular organisms,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-18,Bacteria,Proteobacteria,Deltaproteobacteria,Desulfuromonadales,Desulfuromonadaceae,Pelobacter,,,,,,,,cellular organisms,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,delta/epsilon subdivisions,,,,,,,,,
-19,Bacteria,Proteobacteria,Deltaproteobacteria,Desulfuromonadales,Desulfuromonadaceae,Pelobacter,Pelobacter carbinolicus,,,,,,,cellular organisms,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,delta/epsilon subdivisions,,,,,,,,,
-20,Bacteria,Proteobacteria,Alphaproteobacteria,Caulobacterales,Caulobacteraceae,Phenylobacterium,,,,,,,,cellular organisms,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-21,Bacteria,Proteobacteria,Alphaproteobacteria,Caulobacterales,Caulobacteraceae,Phenylobacterium,Phenylobacterium immobile,,,,,,,cellular organisms,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-22,Bacteria,Proteobacteria,Gammaproteobacteria,Alteromonadales,Shewanellaceae,Shewanella,,,,,,,,cellular organisms,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-23,Bacteria,Proteobacteria,Gammaproteobacteria,Alteromonadales,Shewanellaceae,Shewanella,Shewanella colwelliana,,,,,,,cellular organisms,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-24,Bacteria,Proteobacteria,Gammaproteobacteria,Alteromonadales,Shewanellaceae,Shewanella,Shewanella putrefaciens,,,,,,,cellular organisms,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-25,Bacteria,Proteobacteria,Gammaproteobacteria,Alteromonadales,Shewanellaceae,Shewanella,Shewanella hanedai,,,,,,,cellular organisms,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-```
+## Download lineages
 
-The taxonomy IDs (`tax_id`) follow a hierarchical structure, so everything can
-be traced back to a `tax_id` of 1, as seen at the first line. Similarly,
-everthing that's Bacteria is supposed to be traced back to a `tax_id` of 2, the
-second line, and so on and so forth.
+To download the latest version of pre-converted lineages, click
+[here](https://gitlab.com/zyxue/ncbitax2lin-lineages/repository/archive.zip?ref=master).
+For older versions, please see <a
+href="https://gitlab.com/zyxue/ncbitax2lin-lineages/tags"
+target="_blank">here</a>.
 
-Another example with entries that involve *Homo sapiens* are
+All pre-converted lineages are hosted on
+[ncbitax2lin-lineages](https://gitlab.com/zyxue/ncbitax2lin-lineages/tree/master),
+a [GitLab](https://gitlab.com/) repo, which allows pushing larger files without
+[Git LFS](https://git-lfs.github.com/) and a bigger repo size limit.
 
-```
-$ zcat lineages.csv.gz | \grep -i 'homo sapiens'
-9606,Eukaryota,Chordata,Mammalia,Primates,Hominidae,Homo,Homo sapiens,,,,,Simiiformes,Metazoa,cellular organisms,Opisthokonta,Dipnotetrapodomorpha,Tetrapoda,Amniota,Theria,Eutheria,Boreoeutheria,,,,,Eumetazoa,,,,Bilateria,Deuterostomia,Vertebrata,Gnathostomata,Teleostomi,Euteleostomi,Sarcopterygii,Catarrhini,,,,,Homininae,,,Haplorrhini,Craniata,,,,Hominoidea,Euarchontoglires,,,,
-63221,Eukaryota,Chordata,Mammalia,Primates,Hominidae,Homo,Homo sapiens,,,,,Simiiformes,Metazoa,cellular organisms,Opisthokonta,Dipnotetrapodomorpha,Tetrapoda,Amniota,Theria,Eutheria,Boreoeutheria,,,,,Eumetazoa,,,,Bilateria,Deuterostomia,Vertebrata,Gnathostomata,Teleostomi,Euteleostomi,Sarcopterygii,Catarrhini,,,,,Homininae,,,Haplorrhini,Craniata,Homo sapiens neanderthalensis,,,Hominoidea,Euarchontoglires,,,,
-741158,Eukaryota,Chordata,Mammalia,Primates,Hominidae,Homo,Homo sapiens,,,,,Simiiformes,Metazoa,cellular organisms,Opisthokonta,Dipnotetrapodomorpha,Tetrapoda,Amniota,Theria,Eutheria,Boreoeutheria,,,,,Eumetazoa,,,,Bilateria,Deuterostomia,Vertebrata,Gnathostomata,Teleostomi,Euteleostomi,Sarcopterygii,Catarrhini,,,,,Homininae,,,Haplorrhini,Craniata,Homo sapiens ssp. Denisova,,,Hominoidea,Euarchontoglires,,,,
-1035824,Eukaryota,Nematoda,Enoplea,Trichocephalida,Trichuridae,Trichuris,Trichuris sp. ex Homo sapiens JP-2011,,,,,,Metazoa,cellular organisms,Opisthokonta,,,,,,,,,,,Eumetazoa,,,,Bilateria,Protostomia,Ecdysozoa,,,,,,,,,Dorylaimia,,,,,,,,,,,,,,
-1131344,Eukaryota,Chordata,Mammalia,,,,Homo sapiens x Mus musculus hybrid cell line,,,,,,Metazoa,cellular organisms,Opisthokonta,Dipnotetrapodomorpha,Tetrapoda,Amniota,unclassified Mammalia,,,,,,,Eumetazoa,,,,Bilateria,Deuterostomia,Vertebrata,Gnathostomata,Teleostomi,Euteleostomi,Sarcopterygii,,,,,,,,,,Craniata,,,,,,,,,
-1383439,Eukaryota,Chordata,Mammalia,,,,Homo sapiens/Mus musculus xenograft,,,,,,Metazoa,cellular organisms,Opisthokonta,Dipnotetrapodomorpha,Tetrapoda,Amniota,unclassified Mammalia,,,,,,,Eumetazoa,,,,Bilateria,Deuterostomia,Vertebrata,Gnathostomata,Teleostomi,Euteleostomi,Sarcopterygii,,,,,,,,,,Craniata,,,,,,,,,
-1573476,Eukaryota,Chordata,Mammalia,,,,Homo sapiens/Rattus norvegicus xenograft,,,,,,Metazoa,cellular organisms,Opisthokonta,Dipnotetrapodomorpha,Tetrapoda,Amniota,unclassified Mammalia,,,,,,,Eumetazoa,,,,Bilateria,Deuterostomia,Vertebrata,Gnathostomata,Teleostomi,Euteleostomi,Sarcopterygii,,,,,,,,,,Craniata,,,,,,,,,
-```
-
-So it's not a just single entry. The taxonomoy is not big, but kind of complex, have fun!
-
-## Introduction
-
-It appears that NCBI periodically regenerates `taxdump.tar.gz` and
-`taxdump.tar.gz.md5` even when its content is still the same. I am not sure how
-their regeneration works, but `taxdump.tar.gz.md5` will differ simply because 
-of a different timestamp.
-
-The included `lineage.csv.gz` could be outdated. I may regernate it once in a
-while, but you are encouraged to regenerate it to be ensured with all latest
-lineage information.
-
-## Regenerate `lineages.csv.gz`
+## Regenerate the lineages yourself
 
 Regeneration is straightforward, but it may incur quite a bit of memory (~20
 GB). I generated `lineages.csv.gz` on a machine with 32 GB memory. Pull request
-on refactoring to a lower memory usage is welcome. It's mainly about this line
-`lineages_dd = pool.map(find_lineage, df.tax_id.values)`. If anything, you
-could notify me on github and I could regenerate it for you.
+on refactoring to a lower memory usage is welcome. It's mainly about
+[this line](https://github.com/zyxue/ncbitax2lin/blob/dev/ncbitax2lin.py#L184),
+where the `pool.map` takes places.
+
+If you really need an updated version but without the hardware resources, you
+could also notify me on github, and I will update it for you.
 
 ### Install
 
@@ -76,7 +38,7 @@ git clone git@github.com:zyxue/ncbitax2lin.git
 cd ncbitax2lin/
 ```
 
-#### Setting up a virtual environment
+#### Set up a virtual environment
 
 Currently, it only works with `python2.7`, and needs
 [pandas](http://pandas.pydata.org/), so make sure you are in a proper virtual
@@ -102,7 +64,7 @@ source venv/bin/activate
 pip install -r env-pip.txt
 ```
 
-### Regeneration
+### Regenerate
 Then run the following, this will download the latest taxdump from NCBI, and run
 the scripts to regenerate all latest lineages from it
 
@@ -110,3 +72,13 @@ the scripts to regenerate all latest lineages from it
 make
 ```
 
+## Note on `taxdump.tar.gz.md5`
+
+It appears that NCBI periodically regenerates `taxdump.tar.gz` and
+`taxdump.tar.gz.md5` even when its content is still the same. I am not sure how
+their regeneration works, but `taxdump.tar.gz.md5` will differ simply because 
+of a different timestamp.
+
+The included `lineage.csv.gz` could be outdated. I may regernate it once in a
+while, but you are encouraged to regenerate it to be ensured with all latest
+lineage information.
