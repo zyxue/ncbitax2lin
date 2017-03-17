@@ -9,16 +9,11 @@ into lineages. An example for human is like
 
 ## Download lineages
 
-To download the latest version of pre-converted lineages, click
-[here](https://gitlab.com/zyxue/ncbitax2lin-lineages/repository/archive.zip?ref=master).
-For older versions, please see <a
-href="https://gitlab.com/zyxue/ncbitax2lin-lineages/tags"
-target="_blank">here</a>.
-
-All pre-converted lineages are hosted on
-[ncbitax2lin-lineages](https://gitlab.com/zyxue/ncbitax2lin-lineages/tree/master),
-a [GitLab](https://gitlab.com/) repo, which allows pushing larger files without
-[Git LFS](https://git-lfs.github.com/) and a bigger repo size limit.
+All pre-converted lineages are hosted on <a
+href="https://gitlab.com/zyxue/ncbitax2lin-lineages/tree/master"
+target="_blank">ncbitax2lin-lineages</a>, a [GitLab](https://gitlab.com/) repo,
+which allows pushing larger files without [Git LFS](https://git-lfs.github.com/)
+and a bigger repo size limit.
 
 ## Regenerate the lineages yourself
 
@@ -78,7 +73,3 @@ It appears that NCBI periodically regenerates `taxdump.tar.gz` and
 `taxdump.tar.gz.md5` even when its content is still the same. I am not sure how
 their regeneration works, but `taxdump.tar.gz.md5` will differ simply because 
 of a different timestamp.
-
-The included `lineage.csv.gz` could be outdated. I may regernate it once in a
-while, but you are encouraged to regenerate it to be ensured with all latest
-lineage information.
