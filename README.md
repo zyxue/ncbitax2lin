@@ -67,6 +67,20 @@ the scripts to regenerate all latest lineages from it
 make
 ```
 
+## FAQ
+
+**Q**: I have a large number of sequences with their corresponding accession
+numbers from NCBI, how to get their lineages?
+
+**A**: First, you need to map accession numbers (GI is deprecated) to tax IDs
+based on `nucl_*accession2taxid.gz` files from
+ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/. Secondly, you can trace a
+sequence's whole lineage based on its tax ID. The tax-id-to-lineage mapping is
+what NCBItax2lin generates for you, and it is available on <a
+href="https://gitlab.com/zyxue/ncbitax2lin-lineages/tree/master"
+target="_blank">ncbitax2lin-lineages</a>.
+
+
 ## Note on `taxdump.tar.gz.md5`
 
 It appears that NCBI periodically regenerates `taxdump.tar.gz` and
