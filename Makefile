@@ -3,17 +3,23 @@
 
 OUTPUT_PREFIX := "lineages-$(shell date +"%Y-%m-%d")"
 OUTPUT_FILE := "$(OUTPUT_PREFIX).csv.gz"
+NAMES_OUTPUT_PREFIX := "names"
+NAMES_OUTPUT_FILE := "$(NAMES_OUTPUT_PREFIX).csv.gz"
+TAXID_LINEAGES_OUTPUT_PREFIX := "taxid-lineages"
+TAXID_LINEAGES_OUTPUT_FILE := "$(TAXID_LINEAGES_OUTPUT_PREFIX).csv.gz"
 
 all: md5sum
 
 md5sum: $(OUTPUT_FILE)
 	md5sum -b $< > $<.md5
 
-$(OUTPUT_FILE): taxdump
+$(OUTPUT_FILE) $(NAMES_OUTPUT_PREFIX) $(TAXID_LINEAGES_OUTPUT_FILE): taxdump
 	python ncbitax2lin.py \
 		--nodes-file taxdump/taxdump/nodes.dmp \
 		--names-file taxdump/taxdump/names.dmp \
-		-o $(OUTPUT_PREFIX)
+		-o $(OUTPUT_PREFIX) \
+                --names-output-prefix $(NAMES_OUTPUT_PREFIX) \
+                --taxid-lineages-output-prefix $(TAXID_LINEAGES_OUTPUT_PREFIX)
 
 .PHONY: .FORCE
 
