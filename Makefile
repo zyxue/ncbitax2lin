@@ -1,7 +1,7 @@
 # reference to Makefile automatic variables:
 # https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html
 
-OUTPUT_PREFIX := "lineages-$(shell date +"%Y-%m-%d")"
+OUTPUT_PREFIX := "lineages"
 OUTPUT_FILE := "$(OUTPUT_PREFIX).csv.gz"
 NAMES_OUTPUT_PREFIX := "names"
 NAMES_OUTPUT_FILE := "$(NAMES_OUTPUT_PREFIX).csv.gz"
