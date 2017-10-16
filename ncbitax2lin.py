@@ -7,7 +7,7 @@ import logging
 
 import pandas as pd
 
-from utils import timeit, backup_file
+from utils import timeit
 
 
 logging.basicConfig(
@@ -29,7 +29,15 @@ def parse_args():
 
     parser.add_argument(
         '-o', '--output-prefix', default='ncbi_lineages',
-        help='will output both lineage information in output_prefix.csv.gz')
+        help='will output lineage name information in output_prefix.csv.gz')
+
+    parser.add_argument(
+        '--names-output-prefix', default='ncbi_names',
+        help='will output name information in names_output_prefix.csv.gz')
+
+    parser.add_argument(
+        '--taxid-lineages-output-prefix', default='ncbi_taxid_lineages',
+        help='will output lineage taxon-ID information in taxid_lineages_output_prefix.csv.gz')
 
     args = parser.parse_args()
     return args
@@ -92,9 +100,9 @@ def load_names(names_file):
     return sci_df
 
 
-def to_dict(lineage):
+def to_name_dict(lineage):
     """
-    convert the lineage into a list of tuples in the form of
+    convert the lineage from a list of tuples in the form of
 
     [
         (tax_id1, rank1, name_txt1),
@@ -102,7 +110,7 @@ def to_dict(lineage):
         ...
     ]
 
-    to a dict
+    to a dictionary of taxon names
     """
     dd = {}
     num_re = re.compile('[0-9]+')
@@ -126,6 +134,37 @@ def to_dict(lineage):
         dd[numbered_rank] = name_txt
     return dd
 
+def to_taxid_dict(lineage):
+    """
+    convert the lineage from a list of tuples in the form of
+    [
+        (tax_id1, rank1, name_txt1),
+        (tax_id2, rank2, name_txt2),
+        ...
+    ]
+    to a dictionary of taxids
+    """
+    dd = {}
+    num_re = re.compile('[0-9]+')
+    len_lineage = len(lineage)
+    for k, __ in enumerate(lineage):
+        tax_id, rank, name_txt = __
+        # use the last rank as the tax_id, whatever it is, genus or species.
+        if k == len_lineage - 1:
+            dd['tax_id'] = int(tax_id)
+
+        # e.g. there could be multiple 'no rank'
+        numbered_rank = rank
+        while numbered_rank in dd:
+            # print __, numbered_rank
+            search = num_re.search(numbered_rank)
+            if search is None:
+                count = 1
+            else:
+                count = int(search.group()) + 1
+            numbered_rank = '{0}{1}'.format(rank, count)
+        dd[numbered_rank] = int(tax_id)
+    return dd
 
 def find_lineage(tax_id):
     if tax_id % 50000 == 0:
@@ -142,8 +181,7 @@ def find_lineage(tax_id):
     # reverse results in lineage of Kingdom => species, this is helpful for
     # to_dict when there are multiple "no rank"s
     lineage.reverse()
-    return to_dict(lineage)
-
+    return to_name_dict(lineage), to_taxid_dict(lineage)
 
 def main():
     # data downloaded from ftp://ftp.ncbi.nih.gov/pub/taxonomy/
@@ -181,15 +219,18 @@ def main():
                  'for all tax ids'.format(ncpus))
     pool = multiprocessing.Pool(ncpus)
     # take about 18G memory
-    lineages_dd = pool.map(find_lineage, df.tax_id.values)
+    name_lineages_dd, taxid_lineages_dd = zip(*pool.map(find_lineage, df.tax_id.values))
     pool.close()
 
-    logging.info('generating a dictionary of lineages information...')
-    dd_for_df = dict(zip(range(len(lineages_dd)), lineages_dd))
+    logging.info('generating dictionaries of lineages information...')
+    name_dd_for_df = dict(zip(range(len(name_lineages_dd)), name_lineages_dd))
+    taxid_dd_for_df = dict(zip(range(len(taxid_lineages_dd)), taxid_lineages_dd))
 
     logging.info('generating lineages_df...')
-    lineages_df = pd.DataFrame.from_dict(dd_for_df, orient='index')
-    lineages_df.sort_values('tax_id', inplace=True)
+    name_lineages_df = pd.DataFrame.from_dict(name_dd_for_df, orient='index')
+    taxid_lineages_df = pd.DataFrame.from_dict(taxid_dd_for_df, orient='index')
+    name_lineages_df.sort_values('tax_id', inplace=True)
+    taxid_lineages_df.sort_values('tax_id', inplace=True)
     # # alternatively, but less useful, sort by ranks
     # lineages_df.sort_values(['superkingdom',
     #                          'phylum',
@@ -199,10 +240,9 @@ def main():
     #                          'genus',
     #                          'species'], inplace=True)
 
-    lineages_csv_output = os.path.join('{0}.csv.gz'.format(args.output_prefix))
-    backup_file(lineages_csv_output)
-    logging.info("writing lineages to {0}".format(lineages_csv_output))
-    with open(lineages_csv_output, 'wb') as opf:
+    taxid_lineages_csv_output = os.path.join('{0}.csv.gz'.format(args.taxid_lineages_output_prefix))
+    logging.info("writing taxid lineages to {0}".format(taxid_lineages_csv_output))
+    with open(taxid_lineages_csv_output, 'wb') as opf:
         # make sure the name and timestamp are not gzipped, (like gzip -n)
         opf_gz = gzip.GzipFile('', 'wb', 9, opf, 0.)
         cols = ['tax_id',
@@ -213,12 +253,36 @@ def main():
                 'family',
                 'genus',
                 'species']
-
-        other_cols = sorted([__ for __ in lineages_df.columns
-                             if __ not in cols])
-        output_cols = cols + other_cols
-        lineages_df.to_csv(opf_gz, index=False, columns=output_cols)
+        taxid_lineages_df = taxid_lineages_df.fillna(-999) # avoid floats in output
+        taxid_lineages_df = taxid_lineages_df.astype(int)
+        taxid_lineages_df.to_csv(opf_gz, index=False, columns=cols)
         opf_gz.close()
+
+    names_csv_output = os.path.join('{0}.csv.gz'.format(args.names_output_prefix))
+    logging.info("writing names to {0}".format(names_csv_output))
+    with open(names_csv_output, 'wb') as opf:
+        # make sure the name and timestamp are not gzipped, (like gzip -n)
+        opf_gz = gzip.GzipFile('', 'wb', 9, opf, 0.)
+        cols = ['tax_id', 'name_txt']
+        df.to_csv(opf_gz, index=False, columns=cols)
+        opf_gz.close()
+
+    name_lineages_csv_output = os.path.join('{0}.csv.gz'.format(args.output_prefix))
+    logging.info("writing lineages to {0}".format(name_lineages_csv_output))
+    with open(name_lineages_csv_output, 'wb') as opf:
+        # make sure the name and timestamp are not gzipped, (like gzip -n)
+        opf_gz = gzip.GzipFile('', 'wb', 9, opf, 0.)
+        cols = ['tax_id',
+                'superkingdom',
+                'phylum',
+                'class',
+                'order',
+                'family',
+                'genus',
+                'species']
+        name_lineages_df.to_csv(opf_gz, index=False, columns=cols)
+        opf_gz.close()
+
 
 if __name__ == "__main__":
     main()
