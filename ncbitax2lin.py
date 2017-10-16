@@ -190,7 +190,6 @@ def main():
     names_df = load_names(args.names_file)
     df = nodes_df.merge(names_df, on='tax_id')
     df = df[['tax_id', 'parent_tax_id', 'rank', 'name_txt']]
-    species_taxids = df.loc[df['rank'] == 'species']['tax_id'].tolist()
     df.reset_index(drop=True, inplace=True)
     logging.info('# of tax ids: {0}'.format(df.shape[0]))
     # log summary info about the dataframe
@@ -242,7 +241,7 @@ def main():
     #                          'species'], inplace=True)
 
     taxid_lineages_csv_output = os.path.join('{0}.csv.gz'.format(args.taxid_lineages_output_prefix))
-    logging.info("writing species-level taxid lineages to {0}".format(taxid_lineages_csv_output))
+    logging.info("writing taxid lineages to {0}".format(taxid_lineages_csv_output))
     with open(taxid_lineages_csv_output, 'wb') as opf:
         # make sure the name and timestamp are not gzipped, (like gzip -n)
         opf_gz = gzip.GzipFile('', 'wb', 9, opf, 0.)
@@ -254,7 +253,6 @@ def main():
                 'family',
                 'genus',
                 'species']
-        taxid_lineages_df = taxid_lineages_df.loc[taxid_lineages_df['tax_id'].isin(species_taxids)] # output only species-level taxids
         taxid_lineages_df = taxid_lineages_df.fillna(-999) # avoid floats in output
         taxid_lineages_df = taxid_lineages_df.astype(int)
         taxid_lineages_df.to_csv(opf_gz, index=False, columns=cols)
