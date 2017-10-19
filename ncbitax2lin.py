@@ -253,8 +253,16 @@ def main():
                 'family',
                 'genus',
                 'species']
-        taxid_lineages_df = taxid_lineages_df.fillna(-999) # avoid floats in output
-        taxid_lineages_df = taxid_lineages_df.astype(int)
+        undef_taxids = {'species': -100,
+                        'genus': -200,
+                        'family': -300,
+                        'order': -400,
+                        'class': -500,
+                        'phylum': -600,
+                        'superkingdom': -700}
+        for col in undef_taxids.keys():
+            taxid_lineages_df[[col]] = taxid_lineages_df[[col]].fillna(value=undef_taxids[col])
+        taxid_lineages_df[cols] = taxid_lineages_df[cols].astype(int)
         taxid_lineages_df.to_csv(opf_gz, index=False, columns=cols)
         opf_gz.close()
 
