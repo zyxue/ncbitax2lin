@@ -261,9 +261,8 @@ def main():
                         'phylum': -600,
                         'superkingdom': -700}
         for col in undef_taxids.keys():
-          taxid_lineages_df[[col]] = taxid_lineages_df[[col]].fillna(value=undef_taxids[col])
-
-        taxid_lineages_df = taxid_lineages_df.astype(int)
+            taxid_lineages_df[[col]] = taxid_lineages_df[[col]].fillna(value=undef_taxids[col])
+        taxid_lineages_df[cols] = taxid_lineages_df[cols].astype(int)
         taxid_lineages_df.to_csv(opf_gz, index=False, columns=cols)
         opf_gz.close()
 
