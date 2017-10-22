@@ -266,11 +266,12 @@ def main():
         taxid_lineages_df.to_csv(opf_gz, index=False, columns=cols)
         opf_gz.close()
 
+    ### Make python shelf file
     taxid_lineages_shelf_output = os.path.join('{0}.db'.format(args.taxid_lineages_output_prefix))
     logging.info("writing taxid lineages to {0}".format(taxid_lineages_shelf_output))
     d = shelve.open(taxid_lineages_shelf_output)
     for index, row in taxid_lineages_df.iterrows():
-        d[row['tax_id']] = (row['species'], row['genus'], row['family'])
+        d[str(row['tax_id'])] = (str(row['species']), str(row['genus']), str(row['family']))
     d.close()
 
     names_csv_output = os.path.join('{0}.csv.gz'.format(args.names_output_prefix))
