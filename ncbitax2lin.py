@@ -271,7 +271,7 @@ def main():
     logging.info("writing taxid lineages to {0}".format(taxid_lineages_shelf_output))
     d = shelve.open(taxid_lineages_shelf_output)
     for index, row in taxid_lineages_df.iterrows():
-        d[str(row['tax_id'])] = (str(row['species']), str(row['genus']), str(row['family']))
+        d[str(int(row['tax_id']))] = (str(int(row['species'])), str(int(row['genus'])), str(int(row['family'])))
     d.close()
 
     names_csv_output = os.path.join('{0}.csv.gz'.format(args.names_output_prefix))
