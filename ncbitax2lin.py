@@ -288,15 +288,7 @@ def main():
     with open(name_lineages_csv_output, 'wb') as opf:
         # make sure the name and timestamp are not gzipped, (like gzip -n)
         opf_gz = gzip.GzipFile('', 'wb', 9, opf, 0.)
-        cols = ['tax_id',
-                'superkingdom',
-                'phylum',
-                'class',
-                'order',
-                'family',
-                'genus',
-                'species']
-        name_lineages_df.to_csv(opf_gz, index=False, columns=cols)
+        name_lineages_df.to_csv(opf_gz, index=False)
         opf_gz.close()
 
 
