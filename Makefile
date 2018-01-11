@@ -23,6 +23,3 @@ $(OUTPUT_FILE) $(NAMES_OUTPUT_PREFIX) $(TAXID_LINEAGES_OUTPUT_FILE) $(TAXID_LINE
                 --taxid-lineages-output-prefix $(TAXID_LINEAGES_OUTPUT_PREFIX)
 
 .PHONY: .FORCE
-
-taxdump: .FORCE
-	$(MAKE) -C taxdump all
