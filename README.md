@@ -1,3 +1,8 @@
+# New release of lineage file
+
+**[lineages-2018-02-01.csv.gz](https://gitlab.com/zyxue/ncbitax2lin-lineages/blob/master/lineages-2018-02-01.csv.gzip)**
+
+
 # NCBItax2lin
 
 Convert NCBI taxonomy dump (taxdump, ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/)
