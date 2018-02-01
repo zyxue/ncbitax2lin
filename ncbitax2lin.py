@@ -204,7 +204,13 @@ def main():
     logging.info("writing lineages to {0}".format(lineages_csv_output))
     with open(lineages_csv_output, 'wb') as opf:
         # make sure the name and timestamp are not gzipped, (like gzip -n)
-        opf_gz = gzip.GzipFile('', 'wb', 9, opf, 0.)
+        opf_gz = gzip.GzipFile(
+            filename='',        # empty string because fileobj is given
+            mode='wb',          # wb doesn't seem to work sometimes
+            compresslevel=9,
+            fileobj=opf,
+            mtime=0.   # an optional numeric timestamp, set to be deterministic
+        )
         cols = ['tax_id',
                 'superkingdom',
                 'phylum',
