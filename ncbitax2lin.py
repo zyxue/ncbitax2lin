@@ -183,6 +183,11 @@ def find_lineage(tax_id):
     lineage.reverse()
     return to_name_dict(lineage), to_taxid_dict(lineage)
 
+def process_lineage_dd(lineage_dd):
+    dd_for_df = dict(zip(range(len(lineage_dd)), lineage_dd))
+    lineages_df = pd.DataFrame.from_dict(dd_for_df, orient='index')
+    return lineages_df.sort_values('tax_id')
+
 def write_output(output_prefix, output_name_log, df, cols=None, undef_taxids=None):
     output = os.path.join('{0}.csv.gz'.format(output_prefix))
     logging.info("writing %s to %s" % (output_name_log, taxid_lineages_csv_output))
@@ -239,22 +244,8 @@ def main():
     pool.close()
 
     logging.info('generating dictionaries of lineages information...')
-    name_dd_for_df = dict(zip(range(len(name_lineages_dd)), name_lineages_dd))
-    taxid_dd_for_df = dict(zip(range(len(taxid_lineages_dd)), taxid_lineages_dd))
-
-    logging.info('generating lineages_df...')
-    name_lineages_df = pd.DataFrame.from_dict(name_dd_for_df, orient='index')
-    taxid_lineages_df = pd.DataFrame.from_dict(taxid_dd_for_df, orient='index')
-    name_lineages_df.sort_values('tax_id', inplace=True)
-    taxid_lineages_df.sort_values('tax_id', inplace=True)
-    # # alternatively, but less useful, sort by ranks
-    # lineages_df.sort_values(['superkingdom',
-    #                          'phylum',
-    #                          'class',
-    #                          'order',
-    #                          'family',
-    #                          'genus',
-    #                          'species'], inplace=True)
+    name_lineages_df = process_lineage_dd(name_lineages_dd)
+    taxid_lineages_df = process_lineage_dd(taxid_lineages_dd)
 
     undef_taxids = {'species': -100,
                     'genus': -200,
