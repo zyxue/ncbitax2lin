@@ -183,6 +183,22 @@ def find_lineage(tax_id):
     lineage.reverse()
     return to_name_dict(lineage), to_taxid_dict(lineage)
 
+def write_output(output_prefix, output_name_log, df, cols=None, undef_taxids=None):
+    output = os.path.join('{0}.csv.gz'.format(output_prefix))
+    logging.info("writing %s to %s" % (output_name_log, taxid_lineages_csv_output))
+    with open(output, 'wb') as opf:
+        # make sure the name and timestamp are not gzipped, (like gzip -n)
+        opf_gz = gzip.GzipFile('', 'wb', 9, opf, 0.)
+        if undef_taxids and cols:
+            for col in undef_taxids.keys():
+                df[[col]] = df[[col]].fillna(value=undef_taxids[col])
+            df[cols] = df[cols].astype(int)
+        if cols:
+            df.to_csv(opf_gz, index=False, columns=cols)
+        else:
+            df.to_csv(opf_gz, index=False)
+        opf_gz.close()
+
 def main():
     # data downloaded from ftp://ftp.ncbi.nih.gov/pub/taxonomy/
     args = parse_args()
@@ -240,31 +256,16 @@ def main():
     #                          'genus',
     #                          'species'], inplace=True)
 
-    taxid_lineages_csv_output = os.path.join('{0}.csv.gz'.format(args.taxid_lineages_output_prefix))
-    logging.info("writing taxid lineages to {0}".format(taxid_lineages_csv_output))
-    with open(taxid_lineages_csv_output, 'wb') as opf:
-        # make sure the name and timestamp are not gzipped, (like gzip -n)
-        opf_gz = gzip.GzipFile('', 'wb', 9, opf, 0.)
-        cols = ['tax_id',
-                'superkingdom',
-                'phylum',
-                'class',
-                'order',
-                'family',
-                'genus',
-                'species']
-        undef_taxids = {'species': -100,
-                        'genus': -200,
-                        'family': -300,
-                        'order': -400,
-                        'class': -500,
-                        'phylum': -600,
-                        'superkingdom': -700}
-        for col in undef_taxids.keys():
-            taxid_lineages_df[[col]] = taxid_lineages_df[[col]].fillna(value=undef_taxids[col])
-        taxid_lineages_df[cols] = taxid_lineages_df[cols].astype(int)
-        taxid_lineages_df.to_csv(opf_gz, index=False, columns=cols)
-        opf_gz.close()
+    undef_taxids = {'species': -100,
+                    'genus': -200,
+                    'family': -300,
+                    'order': -400,
+                    'class': -500,
+                    'phylum': -600,
+                    'superkingdom': -700}
+    write_output(args.taxid_lineages_output_prefix, "taxid lineages", taxid_lineages_df, 
+                 ['tax_id', 'superkingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species'],
+                 undef_taxids)
 
     ### Make python shelf file
     taxid_lineages_shelf_output = os.path.join('{0}.db'.format(args.taxid_lineages_output_prefix))
@@ -274,23 +275,8 @@ def main():
         d[str(int(row['tax_id']))] = (str(int(row['species'])), str(int(row['genus'])), str(int(row['family'])))
     d.close()
 
-    names_csv_output = os.path.join('{0}.csv.gz'.format(args.names_output_prefix))
-    logging.info("writing names to {0}".format(names_csv_output))
-    with open(names_csv_output, 'wb') as opf:
-        # make sure the name and timestamp are not gzipped, (like gzip -n)
-        opf_gz = gzip.GzipFile('', 'wb', 9, opf, 0.)
-        cols = ['tax_id', 'name_txt']
-        df.to_csv(opf_gz, index=False, columns=cols)
-        opf_gz.close()
-
-    name_lineages_csv_output = os.path.join('{0}.csv.gz'.format(args.output_prefix))
-    logging.info("writing lineages to {0}".format(name_lineages_csv_output))
-    with open(name_lineages_csv_output, 'wb') as opf:
-        # make sure the name and timestamp are not gzipped, (like gzip -n)
-        opf_gz = gzip.GzipFile('', 'wb', 9, opf, 0.)
-        name_lineages_df.to_csv(opf_gz, index=False)
-        opf_gz.close()
-
+    write_output(args.names_output_prefix, "names", df, ['tax_id', 'name_txt'])
+    write_output(args.output_prefix, "lineages", name_lineages_df)
 
 if __name__ == "__main__":
     main()
