@@ -80,7 +80,7 @@ def load_nodes(nodes_file):
 
 
 @timeit
-def load_names(names_file):
+def load_names(names_file, name_class='scientific name'):
     '''
     load names.dmp and convert it into a pandas.DataFrame
     '''
@@ -204,11 +204,9 @@ def write_output(output_prefix, output_name_log, df, cols=None, undef_taxids=Non
             df.to_csv(opf_gz, index=False)
         opf_gz.close()
 
-def main():
-    # data downloaded from ftp://ftp.ncbi.nih.gov/pub/taxonomy/
-    args = parse_args()
-    nodes_df = load_nodes(args.nodes_file)
-    names_df = load_names(args.names_file)
+def lineages_by_name_only(nodes_file, names_file, name_class):
+    nodes_df = load_nodes(nodes_file)
+    names_df = load_names(names_file, name_class)
     df = nodes_df.merge(names_df, on='tax_id')
     df = df[['tax_id', 'parent_tax_id', 'rank', 'name_txt']]
     df.reset_index(drop=True, inplace=True)
@@ -216,22 +214,18 @@ def main():
     # log summary info about the dataframe
     df.info()
 
-    # force to use global variable TAXONOMY_DICT because map doesn't allow
-    # passing extra args easily
 
-    # TAXONOMY_DICT: a dict with tax_id as the key and each record as a value.
-    # example tuple items:
-    # (1,
-    #  {'parent_tax_id': 1, 'name_txt': 'root',
-    #   'rank': 'no rank', 'tax_id': 1}
-    # )
+def main():
+    args = parse_args()
+    nodes_df = load_nodes(args.nodes_file)
+    names_df = load_names(args.names_file, 'scientific name')
+    df = nodes_df.merge(names_df, on='tax_id')
+    df = df[['tax_id', 'parent_tax_id', 'rank', 'name_txt']]
+    df.reset_index(drop=True, inplace=True)
+    logging.info('# of tax ids: {0}'.format(df.shape[0]))
+    df.info()
 
-    # (16,
-    #  {'parent_tax_id': 32011, 'name_txt': 'Methylophilus',
-    #   'rank': 'genus', 'tax_id': 16}
-    # )
-
-    global TAXONOMY_DICT
+    global TAXONOMY_DICT # example item: (16, {'parent_tax_id': 32011, 'name_txt': 'Methylophilus', 'rank': 'genus', 'tax_id': 16})
     logging.info('generating TAXONOMY_DICT...')
     TAXONOMY_DICT = dict(zip(df.tax_id.values, df.to_dict('records')))
 
@@ -239,14 +233,14 @@ def main():
     logging.info('found {0} cpus, and will use all of them to find lineages '
                  'for all tax ids'.format(ncpus))
     pool = multiprocessing.Pool(ncpus)
-    # take about 18G memory
-    name_lineages_dd, taxid_lineages_dd = zip(*pool.map(find_lineage, df.tax_id.values))
+    name_lineages_dd, taxid_lineages_dd = zip(*pool.map(find_lineage, df.tax_id.values)) # take about 18G memory
     pool.close()
 
-    logging.info('generating dictionaries of lineages information...')
-    name_lineages_df = process_lineage_dd(name_lineages_dd)
-    taxid_lineages_df = process_lineage_dd(taxid_lineages_dd)
+    logging.info('generating names output...')
+    write_output(args.names_output_prefix, "names", df, ['tax_id', 'name_txt'])
 
+    logging.info('generating lineage-by-taxid output...')
+    taxid_lineages_df = process_lineage_dd(taxid_lineages_dd)
     undef_taxids = {'species': -100,
                     'genus': -200,
                     'family': -300,
@@ -258,16 +252,18 @@ def main():
                  ['tax_id', 'superkingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species'],
                  undef_taxids)
 
-    ### Make python shelf file
-    taxid_lineages_shelf_output = os.path.join('{0}.db'.format(args.taxid_lineages_output_prefix))
-    logging.info("writing taxid lineages to {0}".format(taxid_lineages_shelf_output))
-    d = shelve.open(taxid_lineages_shelf_output)
-    for index, row in taxid_lineages_df.iterrows():
-        d[str(int(row['tax_id']))] = (str(int(row['species'])), str(int(row['genus'])), str(int(row['family'])))
-    d.close()
+    # Make python shelf file -- not needed anymore:
+    # taxid_lineages_shelf_output = os.path.join('{0}.db'.format(args.taxid_lineages_output_prefix))
+    # logging.info("writing taxid lineages to {0}".format(taxid_lineages_shelf_output))
+    # d = shelve.open(taxid_lineages_shelf_output)
+    # for index, row in taxid_lineages_df.iterrows():
+    #     d[str(int(row['tax_id']))] = (str(int(row['species'])), str(int(row['genus'])), str(int(row['family'])))
+    # d.close()
 
-    write_output(args.names_output_prefix, "names", df, ['tax_id', 'name_txt'])
-    write_output(args.output_prefix, "lineages", name_lineages_df)
+    # Make file of lineages by name -- not needed anymore:
+    # logging.info('generating dictionary of lineage information by name...')
+    # name_lineages_df = process_lineage_dd(name_lineages_dd)
+    # write_output(args.output_prefix, "lineages", name_lineages_df)
 
 if __name__ == "__main__":
     main()
