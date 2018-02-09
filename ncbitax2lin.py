@@ -214,11 +214,9 @@ def lineages_by_name_only(nodes_file, names_file, name_class):
     # log summary info about the dataframe
     df.info()
 
-
-def main():
-    args = parse_args()
-    nodes_df = load_nodes(args.nodes_file)
-    names_df = load_names(args.names_file, 'scientific name')
+def generate_outputs(nodes_file, names_file, name_class, names_output_prefix, taxid_lineages_output_prefix=None):
+    nodes_df = load_nodes(nodes_file)
+    names_df = load_names(names_file, name_class)
     df = nodes_df.merge(names_df, on='tax_id')
     df = df[['tax_id', 'parent_tax_id', 'rank', 'name_txt']]
     df.reset_index(drop=True, inplace=True)
@@ -239,31 +237,32 @@ def main():
     logging.info('generating names output...')
     write_output(args.names_output_prefix, "names", df, ['tax_id', 'name_txt'])
 
-    logging.info('generating lineage-by-taxid output...')
-    taxid_lineages_df = process_lineage_dd(taxid_lineages_dd)
-    undef_taxids = {'species': -100,
-                    'genus': -200,
-                    'family': -300,
-                    'order': -400,
-                    'class': -500,
-                    'phylum': -600,
-                    'superkingdom': -700}
-    write_output(args.taxid_lineages_output_prefix, "taxid lineages", taxid_lineages_df, 
-                 ['tax_id', 'superkingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species'],
-                 undef_taxids)
+    if taxid_lineages_output_prefix:
+        logging.info('generating lineage-by-taxid output...')
+        taxid_lineages_df = process_lineage_dd(taxid_lineages_dd)
+        undef_taxids = {'species': -100,
+                        'genus': -200,
+                        'family': -300,
+                        'order': -400,
+                        'class': -500,
+                        'phylum': -600,
+                        'superkingdom': -700}
+        write_output(taxid_lineages_output_prefix, "taxid lineages", taxid_lineages_df,
+                     ['tax_id', 'superkingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species'],
+                     undef_taxids)
 
-    # Make python shelf file -- not needed anymore:
-    # taxid_lineages_shelf_output = os.path.join('{0}.db'.format(args.taxid_lineages_output_prefix))
-    # logging.info("writing taxid lineages to {0}".format(taxid_lineages_shelf_output))
-    # d = shelve.open(taxid_lineages_shelf_output)
-    # for index, row in taxid_lineages_df.iterrows():
-    #     d[str(int(row['tax_id']))] = (str(int(row['species'])), str(int(row['genus'])), str(int(row['family'])))
-    # d.close()
+        logging.info('writing lineage-by-taxid shelf...')
+        taxid_lineages_shelf_output = os.path.join('{0}.db'.format(args.taxid_lineages_output_prefix))
+        d = shelve.open(taxid_lineages_shelf_output)
+        for index, row in taxid_lineages_df.iterrows():
+            d[str(int(row['tax_id']))] = (str(int(row['species'])), str(int(row['genus'])), str(int(row['family'])))
+        d.close()
 
-    # Make file of lineages by name -- not needed anymore:
-    # logging.info('generating dictionary of lineage information by name...')
-    # name_lineages_df = process_lineage_dd(name_lineages_dd)
-    # write_output(args.output_prefix, "lineages", name_lineages_df)
+def main():
+    args = parse_args()
+    generate_outputs(args.nodes_file, args.names_file, 'scientific name', args.names_output_prefix,
+                     args.taxid_lineages_output_prefix)
+    generate_outputs(args.nodes_file, args.names_file, 'genbank common name', args.names_output_prefix)
 
 if __name__ == "__main__":
     main()
