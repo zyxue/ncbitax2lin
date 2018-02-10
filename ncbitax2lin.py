@@ -175,13 +175,15 @@ def find_lineage(tax_id):
         logging.debug('working on tax_id: {0}'.format(tax_id))
     lineage = []
     while True:
-        rec = TAXONOMY_DICT[tax_id]
-        print "%s, %s" % (str(tax_id), rec)
-        lineage.append((rec['tax_id'], rec['rank'], rec['name_txt']))
-        tax_id = rec['parent_tax_id']
+        if tax_id not in TAXONOMY_DICT:
+            print "%s not in TAXONOMY_DICT" % str(tax_id)
+        else:
+            rec = TAXONOMY_DICT[tax_id]
+            lineage.append((rec['tax_id'], rec['rank'], rec['name_txt']))
+            tax_id = rec['parent_tax_id']
 
-        if tax_id == 1:
-            break
+            if tax_id == 1:
+                break
 
     # reverse results in lineage of Kingdom => species, this is helpful for
     # to_dict when there are multiple "no rank"s
