@@ -235,7 +235,7 @@ def generate_outputs(nodes_file, names_file, name_class, names_output_prefix, ta
     pool.close()
 
     logging.info('generating names output...')
-    write_output(args.names_output_prefix, "names", df, ['tax_id', 'name_txt'])
+    write_output(names_output_prefix, "names", df, ['tax_id', 'name_txt'])
 
     if taxid_lineages_output_prefix:
         logging.info('generating lineage-by-taxid output...')
@@ -252,7 +252,7 @@ def generate_outputs(nodes_file, names_file, name_class, names_output_prefix, ta
                      undef_taxids)
 
         logging.info('writing lineage-by-taxid shelf...')
-        taxid_lineages_shelf_output = os.path.join('{0}.db'.format(args.taxid_lineages_output_prefix))
+        taxid_lineages_shelf_output = os.path.join('{0}.db'.format(taxid_lineages_output_prefix))
         d = shelve.open(taxid_lineages_shelf_output)
         for index, row in taxid_lineages_df.iterrows():
             d[str(int(row['tax_id']))] = (str(int(row['species'])), str(int(row['genus'])), str(int(row['family'])))
