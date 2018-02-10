@@ -99,7 +99,7 @@ def load_names(names_file, name_class='scientific name'):
     df['unique_name'] = df['unique_name'].apply(strip)
     df['name_class'] = df['name_class'].apply(strip)
 
-    sci_df = df[df['name_class'] == 'scientific name']
+    sci_df = df[df['name_class'] == name_class]
     sci_df.reset_index(drop=True, inplace=True)
     return sci_df
 
@@ -207,16 +207,6 @@ def write_output(output_prefix, output_name_log, df, cols=None, undef_taxids=Non
         else:
             df.to_csv(opf_gz, index=False)
         opf_gz.close()
-
-def lineages_by_name_only(nodes_file, names_file, name_class):
-    nodes_df = load_nodes(nodes_file)
-    names_df = load_names(names_file, name_class)
-    df = nodes_df.merge(names_df, on='tax_id')
-    df = df[['tax_id', 'parent_tax_id', 'rank', 'name_txt']]
-    df.reset_index(drop=True, inplace=True)
-    logging.info('# of tax ids: {0}'.format(df.shape[0]))
-    # log summary info about the dataframe
-    df.info()
 
 def generate_outputs(nodes_file, names_file, name_class, names_output_prefix, taxid_lineages_output_prefix=None):
     nodes_df = load_nodes(nodes_file)
