@@ -176,6 +176,7 @@ def find_lineage(tax_id):
     lineage = []
     while True:
         rec = TAXONOMY_DICT[tax_id]
+        print "%s, %s" % (str(tax_id), rec)
         lineage.append((rec['tax_id'], rec['rank'], rec['name_txt']))
         tax_id = rec['parent_tax_id']
 
@@ -184,7 +185,6 @@ def find_lineage(tax_id):
 
     # reverse results in lineage of Kingdom => species, this is helpful for
     # to_dict when there are multiple "no rank"s
-    print lineage
     lineage.reverse()
     return to_name_dict(lineage), to_taxid_dict(lineage)
 
