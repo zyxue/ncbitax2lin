@@ -264,11 +264,11 @@ def generate_outputs(nodes_file, names_file, name_class, names_output_prefix, ta
 
 def main():
     args = parse_args()
-    logging.info('PART I: lineage and name outputs')
+    logging.info('PART I: common name output')
+    generate_outputs(args.nodes_file, args.names_file, 'genbank common name', args.common_names_output_prefix)
+    logging.info('PART II: lineage and scientific name outputs')
     generate_outputs(args.nodes_file, args.names_file, 'scientific name', args.names_output_prefix,
                      args.taxid_lineages_output_prefix)
-    logging.info('PART II: common name output')
-    generate_outputs(args.nodes_file, args.names_file, 'genbank common name', args.common_names_output_prefix)
 
 if __name__ == "__main__":
     main()
