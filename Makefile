@@ -19,7 +19,7 @@ $(COMMON_NAMES_OUTPUT_FILE) $(NAMES_OUTPUT_FILE) $(TAXID_LINEAGES_OUTPUT_FILE) $
 		--nodes-file taxdump/taxdump/nodes.dmp \
 		--names-file taxdump/taxdump/names.dmp \
                 --names-output-prefix $(NAMES_OUTPUT_PREFIX) \
-                --names-output-prefix $(COMMON_NAMES_OUTPUT_PREFIX) \
+                --common-names-output-prefix $(COMMON_NAMES_OUTPUT_PREFIX) \
                 --taxid-lineages-output-prefix $(TAXID_LINEAGES_OUTPUT_PREFIX)
 
 .PHONY: .FORCE

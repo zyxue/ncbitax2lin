@@ -33,11 +33,11 @@ def parse_args():
 
     parser.add_argument(
         '--names-output-prefix', default='ncbi_names',
-        help='will output name information in names_output_prefix.csv.gz')
+        help='will output scientific-name information in names_output_prefix.csv.gz')
 
     parser.add_argument(
         '--common-names-output-prefix', default='ncbi_common_names',
-        help='will output name information in common_names_output_prefix.csv.gz')
+        help='will output common-name information in common_names_output_prefix.csv.gz')
 
     parser.add_argument(
         '--taxid-lineages-output-prefix', default='ncbi_taxid_lineages',
