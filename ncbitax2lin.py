@@ -211,6 +211,7 @@ def write_output(output_prefix, output_name_log, df, cols=None, undef_taxids=Non
 def generate_outputs(nodes_file, names_file, name_class, names_output_prefix, taxid_lineages_output_prefix=None):
     nodes_df = load_nodes(nodes_file)
     names_df = load_names(names_file, name_class)
+    logging.info('{0}'.format(names_df))
     df = nodes_df.merge(names_df, on='tax_id')
     df = df[['tax_id', 'parent_tax_id', 'rank', 'name_txt']]
     df.reset_index(drop=True, inplace=True)
