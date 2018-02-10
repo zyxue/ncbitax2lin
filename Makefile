@@ -14,7 +14,7 @@ all: md5sum
 md5sum: $(TAXID_LINEAGES_OUTPUT_FILE)
 	md5sum -b $< > $<.md5
 
-$(NAMES_OUTPUT_FILE) $(TAXID_LINEAGES_OUTPUT_FILE) $(TAXID_LINEAGES_OUTPUT_SHELF): taxdump
+$(COMMON_NAMES_OUTPUT_FILE) $(NAMES_OUTPUT_FILE) $(TAXID_LINEAGES_OUTPUT_FILE) $(TAXID_LINEAGES_OUTPUT_SHELF): taxdump
 	python ncbitax2lin.py \
 		--nodes-file taxdump/taxdump/nodes.dmp \
 		--names-file taxdump/taxdump/names.dmp \
