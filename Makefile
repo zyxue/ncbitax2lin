@@ -3,6 +3,8 @@
 
 NAMES_OUTPUT_PREFIX := "names"
 NAMES_OUTPUT_FILE := "$(NAMES_OUTPUT_PREFIX).csv.gz"
+COMMON_NAMES_OUTPUT_PREFIX := "common_names"
+COMMON_NAMES_OUTPUT_FILE := "$(COMMON_NAMES_OUTPUT_PREFIX).csv.gz"
 TAXID_LINEAGES_OUTPUT_PREFIX := "taxid-lineages"
 TAXID_LINEAGES_OUTPUT_FILE := "$(TAXID_LINEAGES_OUTPUT_PREFIX).csv.gz"
 TAXID_LINEAGES_OUTPUT_SHELF := "$(TAXID_LINEAGES_OUTPUT_PREFIX).db"
@@ -17,6 +19,7 @@ $(NAMES_OUTPUT_FILE) $(TAXID_LINEAGES_OUTPUT_FILE) $(TAXID_LINEAGES_OUTPUT_SHELF
 		--nodes-file taxdump/taxdump/nodes.dmp \
 		--names-file taxdump/taxdump/names.dmp \
                 --names-output-prefix $(NAMES_OUTPUT_PREFIX) \
+                --names-output-prefix $(COMMON_NAMES_OUTPUT_PREFIX) \
                 --taxid-lineages-output-prefix $(TAXID_LINEAGES_OUTPUT_PREFIX)
 
 .PHONY: .FORCE
