@@ -175,9 +175,7 @@ def find_lineage(tax_id):
         logging.debug('working on tax_id: {0}'.format(tax_id))
     lineage = []
     while True:
-        if tax_id not in TAXONOMY_DICT:
-            print "%s not in TAXONOMY_DICT" % str(tax_id)
-        else:
+        if tax_id in TAXONOMY_DICT:
             rec = TAXONOMY_DICT[tax_id]
             lineage.append((rec['tax_id'], rec['rank'], rec['name_txt']))
             tax_id = rec['parent_tax_id']
