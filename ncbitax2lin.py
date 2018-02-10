@@ -190,7 +190,7 @@ def process_lineage_dd(lineage_dd):
 
 def write_output(output_prefix, output_name_log, df, cols=None, undef_taxids=None):
     output = os.path.join('{0}.csv.gz'.format(output_prefix))
-    logging.info("writing %s to %s" % (output_name_log, taxid_lineages_csv_output))
+    logging.info("writing %s to %s" % (output_name_log, output))
     with open(output, 'wb') as opf:
         # make sure the name and timestamp are not gzipped, (like gzip -n)
         opf_gz = gzip.GzipFile('', 'wb', 9, opf, 0.)
