@@ -208,7 +208,7 @@ def write_output(output_prefix, output_name_log, df, cols=None, undef_taxids=Non
             df.to_csv(opf_gz, index=False)
         opf_gz.close()
 
-def generate_outputs(nodes_file, names_file, name_class, names_output_prefix, taxid_lineages_output_prefix=None):
+def generate_name_output(nodes_file, names_file, name_class):
     nodes_df = load_nodes(nodes_file)
     names_df = load_names(names_file, name_class)
     df = nodes_df.merge(names_df, on='tax_id')
@@ -216,13 +216,9 @@ def generate_outputs(nodes_file, names_file, name_class, names_output_prefix, ta
     df.reset_index(drop=True, inplace=True)
     logging.info('# of tax ids: {0}'.format(df.shape[0]))
     df.info()
+    return df
 
-    logging.info('generating names output...')
-    write_output(names_output_prefix, "names", df, ['tax_id', 'name_txt'])
-
-    if taxid_lineages_output_prefix is None:
-        return
-
+def generate_lineage_outputs(df, taxid_lineages_output_prefix):
     global TAXONOMY_DICT # example item: (16, {'parent_tax_id': 32011, 'name_txt': 'Methylophilus', 'rank': 'genus', 'tax_id': 16})
     logging.info('generating TAXONOMY_DICT...')
     TAXONOMY_DICT = dict(zip(df.tax_id.values, df.to_dict('records')))
@@ -257,12 +253,14 @@ def generate_outputs(nodes_file, names_file, name_class, names_output_prefix, ta
 def main():
     args = parse_args()
 
-    logging.info('PART I: common name output')
-    generate_outputs(args.nodes_file, args.names_file, 'genbank common name', args.common_names_output_prefix)
+    logging.info('PART I: name outputs')
+    scientific_df = generate_name_output(args.nodes_file, args.names_file, 'scientific name')
+    common_df = generate_name_output(args.nodes_file, args.names_file, 'genbank common name')
+    df = scientific_df.join(common_df, on=tax_id, rsuffix='_common')
+    write_output(args.names_output_prefix, "names", df, ['tax_id', 'name_txt', 'name_txt_common'])
 
     logging.info('PART II: lineage and scientific name outputs')
-    generate_outputs(args.nodes_file, args.names_file, 'scientific name', args.names_output_prefix,
-                     args.taxid_lineages_output_prefix)
+    generate_lineage_outputs(scientific_df, args.common_names_output_prefix)
 
 if __name__ == "__main__":
     main()
