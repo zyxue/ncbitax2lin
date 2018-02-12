@@ -175,13 +175,12 @@ def find_lineage(tax_id):
         logging.debug('working on tax_id: {0}'.format(tax_id))
     lineage = []
     while True:
-        if tax_id in TAXONOMY_DICT:
-            rec = TAXONOMY_DICT[tax_id]
-            lineage.append((rec['tax_id'], rec['rank'], rec['name_txt']))
-            tax_id = rec['parent_tax_id']
+        rec = TAXONOMY_DICT[tax_id]
+        lineage.append((rec['tax_id'], rec['rank'], rec['name_txt']))
+        tax_id = rec['parent_tax_id']
 
-            if tax_id == 1:
-                break
+        if tax_id == 1:
+            break
 
     # reverse results in lineage of Kingdom => species, this is helpful for
     # to_dict when there are multiple "no rank"s
@@ -218,6 +217,12 @@ def generate_outputs(nodes_file, names_file, name_class, names_output_prefix, ta
     logging.info('# of tax ids: {0}'.format(df.shape[0]))
     df.info()
 
+    logging.info('generating names output...')
+    write_output(names_output_prefix, "names", df, ['tax_id', 'name_txt'])
+
+    if taxid_lineages_output_prefix is None:
+        return
+
     global TAXONOMY_DICT # example item: (16, {'parent_tax_id': 32011, 'name_txt': 'Methylophilus', 'rank': 'genus', 'tax_id': 16})
     logging.info('generating TAXONOMY_DICT...')
     TAXONOMY_DICT = dict(zip(df.tax_id.values, df.to_dict('records')))
@@ -229,34 +234,32 @@ def generate_outputs(nodes_file, names_file, name_class, names_output_prefix, ta
     name_lineages_dd, taxid_lineages_dd = zip(*pool.map(find_lineage, df.tax_id.values)) # take about 18G memory
     pool.close()
 
-    logging.info('generating names output...')
-    write_output(names_output_prefix, "names", df, ['tax_id', 'name_txt'])
+    logging.info('generating lineage-by-taxid output...')
+    taxid_lineages_df = process_lineage_dd(taxid_lineages_dd)
+    undef_taxids = {'species': -100,
+                    'genus': -200,
+                    'family': -300,
+                    'order': -400,
+                    'class': -500,
+                    'phylum': -600,
+                    'superkingdom': -700}
+    write_output(taxid_lineages_output_prefix, "taxid lineages", taxid_lineages_df,
+                 ['tax_id', 'superkingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species'],
+                 undef_taxids)
 
-    if taxid_lineages_output_prefix:
-        logging.info('generating lineage-by-taxid output...')
-        taxid_lineages_df = process_lineage_dd(taxid_lineages_dd)
-        undef_taxids = {'species': -100,
-                        'genus': -200,
-                        'family': -300,
-                        'order': -400,
-                        'class': -500,
-                        'phylum': -600,
-                        'superkingdom': -700}
-        write_output(taxid_lineages_output_prefix, "taxid lineages", taxid_lineages_df,
-                     ['tax_id', 'superkingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species'],
-                     undef_taxids)
-
-        logging.info('writing lineage-by-taxid shelf...')
-        taxid_lineages_shelf_output = os.path.join('{0}.db'.format(taxid_lineages_output_prefix))
-        d = shelve.open(taxid_lineages_shelf_output)
-        for index, row in taxid_lineages_df.iterrows():
-            d[str(int(row['tax_id']))] = (str(int(row['species'])), str(int(row['genus'])), str(int(row['family'])))
-        d.close()
+    logging.info('writing lineage-by-taxid shelf...')
+    taxid_lineages_shelf_output = os.path.join('{0}.db'.format(taxid_lineages_output_prefix))
+    d = shelve.open(taxid_lineages_shelf_output)
+    for index, row in taxid_lineages_df.iterrows():
+        d[str(int(row['tax_id']))] = (str(int(row['species'])), str(int(row['genus'])), str(int(row['family'])))
+    d.close()
 
 def main():
     args = parse_args()
+
     logging.info('PART I: common name output')
     generate_outputs(args.nodes_file, args.names_file, 'genbank common name', args.common_names_output_prefix)
+
     logging.info('PART II: lineage and scientific name outputs')
     generate_outputs(args.nodes_file, args.names_file, 'scientific name', args.names_output_prefix,
                      args.taxid_lineages_output_prefix)
