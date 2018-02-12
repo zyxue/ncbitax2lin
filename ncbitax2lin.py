@@ -208,8 +208,7 @@ def write_output(output_prefix, output_name_log, df, cols=None, undef_taxids=Non
             df.to_csv(opf_gz, index=False)
         opf_gz.close()
 
-def generate_name_output(nodes_file, names_file, name_class):
-    nodes_df = load_nodes(nodes_file)
+def generate_name_output(nodes_df, names_file, name_class):
     names_df = load_names(names_file, name_class)
     df = nodes_df.merge(names_df, on='tax_id')
     df = df[['tax_id', 'parent_tax_id', 'rank', 'name_txt']]
@@ -254,8 +253,9 @@ def main():
     args = parse_args()
 
     logging.info('PART I: name outputs')
-    scientific_df = generate_name_output(args.nodes_file, args.names_file, 'scientific name')
-    common_df = generate_name_output(args.nodes_file, args.names_file, 'genbank common name')
+    nodes_df = load_nodes(nodes_file)
+    scientific_df = generate_name_output(nodes_df, args.names_file, 'scientific name')
+    common_df = generate_name_output(nodes_df, args.names_file, 'genbank common name')
     df = scientific_df.join(common_df, on='tax_id', rsuffix='_common')
     write_output(args.names_output_prefix, "names", df, ['tax_id', 'name_txt', 'name_txt_common'])
 
