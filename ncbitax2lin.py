@@ -258,7 +258,7 @@ def main():
     args = parse_args()
 
     logging.info('PART I: common name output')
-    print "args.common_names_output_prefix: %s" % s
+    print "args.common_names_output_prefix: %s" % args.common_names_output_prefix
     generate_outputs(args.nodes_file, args.names_file, 'genbank common name', args.common_names_output_prefix)
 
     logging.info('PART II: lineage and scientific name outputs')
