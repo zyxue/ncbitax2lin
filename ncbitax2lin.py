@@ -36,10 +36,6 @@ def parse_args():
         help='will output scientific-name information in names_output_prefix.csv.gz')
 
     parser.add_argument(
-        '--common-names-output-prefix', default='ncbi_common_names',
-        help='will output common-name information in common_names_output_prefix.csv.gz')
-
-    parser.add_argument(
         '--taxid-lineages-output-prefix', default='ncbi_taxid_lineages',
         help='will output lineage taxon-ID information in taxid_lineages_output_prefix.csv.gz')
 
@@ -260,7 +256,7 @@ def main():
     write_output(args.names_output_prefix, "names", df, ['tax_id', 'name_txt', 'name_txt_common'])
 
     logging.info('PART II: lineage and scientific name outputs')
-    generate_lineage_outputs(scientific_df, args.common_names_output_prefix)
+    generate_lineage_outputs(scientific_df, args.taxid_lineages_output_prefix)
 
 if __name__ == "__main__":
     main()
