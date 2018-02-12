@@ -252,7 +252,7 @@ def main():
     nodes_df = load_nodes(args.nodes_file)
     scientific_df = generate_name_output(nodes_df, args.names_file, 'scientific name')
     common_df = generate_name_output(nodes_df, args.names_file, 'genbank common name')
-    df = scientific_df.join(common_df, on='tax_id', rsuffix='_common')
+    df = scientific_df.merge(common_df, 'left', on='tax_id', suffixes=('', '_common'))
     write_output(args.names_output_prefix, "names", df, ['tax_id', 'name_txt', 'name_txt_common'])
 
     logging.info('PART II: lineage and scientific name outputs')
