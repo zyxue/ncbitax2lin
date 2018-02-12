@@ -253,7 +253,7 @@ def main():
     args = parse_args()
 
     logging.info('PART I: name outputs')
-    nodes_df = load_nodes(nodes_file)
+    nodes_df = load_nodes(args.nodes_file)
     scientific_df = generate_name_output(nodes_df, args.names_file, 'scientific name')
     common_df = generate_name_output(nodes_df, args.names_file, 'genbank common name')
     df = scientific_df.join(common_df, on='tax_id', rsuffix='_common')
