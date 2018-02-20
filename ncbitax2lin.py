@@ -39,6 +39,10 @@ def parse_args():
         '--taxid-lineages-output-prefix', default='ncbi_taxid_lineages',
         help='will output lineage taxon-ID information in taxid_lineages_output_prefix.csv.gz')
 
+    parser.add_argument(
+        '--name-lineages-output-prefix', default='ncbi_name_lineages',
+        help='will output lineage name information in name_lineages_output_prefix.csv.gz')
+
     args = parser.parse_args()
     return args
 
@@ -213,7 +217,7 @@ def generate_name_output(nodes_df, names_file, name_class):
     df.info()
     return df
 
-def generate_lineage_outputs(df, taxid_lineages_output_prefix):
+def generate_lineage_outputs(df, taxid_lineages_output_prefix, name_lineages_output_prefix):
     global TAXONOMY_DICT # example item: (16, {'parent_tax_id': 32011, 'name_txt': 'Methylophilus', 'rank': 'genus', 'tax_id': 16})
     logging.info('generating TAXONOMY_DICT...')
     TAXONOMY_DICT = dict(zip(df.tax_id.values, df.to_dict('records')))
@@ -224,6 +228,10 @@ def generate_lineage_outputs(df, taxid_lineages_output_prefix):
     pool = multiprocessing.Pool(ncpus)
     name_lineages_dd, taxid_lineages_dd = zip(*pool.map(find_lineage, df.tax_id.values)) # take about 18G memory
     pool.close()
+
+    logging.info('generating lineage-by-name output...')
+    name_lineages_df = process_lineage_dd(name_lineages_dd)
+    write_output(name_lineages_output_prefix, "name lineages", name_lineages_df)
 
     logging.info('generating lineage-by-taxid output...')
     taxid_lineages_df = process_lineage_dd(taxid_lineages_dd)
@@ -256,7 +264,7 @@ def main():
     write_output(args.names_output_prefix, "names", df, ['tax_id', 'name_txt', 'name_txt_common'])
 
     logging.info('PART II: lineage and scientific name outputs')
-    generate_lineage_outputs(scientific_df, args.taxid_lineages_output_prefix)
+    generate_lineage_outputs(scientific_df, args.taxid_lineages_output_prefix, args.name_lineages_output_prefix)
 
 if __name__ == "__main__":
     main()
