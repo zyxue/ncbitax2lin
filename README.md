@@ -1,6 +1,6 @@
 # Current release of generated lineage file
 
-Available at **[https://gitlab.com/zyxue/ncbitax2lin-lineages/blob/master/lineages-2018-02-01.csv.gz](https://gitlab.com/zyxue/ncbitax2lin-lineages/blob/master/lineages-2018-02-01.csv.gz)**
+Available at **[https://gitlab.com/zyxue/ncbitax2lin-lineages/blob/master/lineages-2018-03-12.csv.gz](https://gitlab.com/zyxue/ncbitax2lin-lineages/blob/master/lineages-2018-03-12.csv.gz)**
 
 
 # NCBItax2lin
