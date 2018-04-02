@@ -241,9 +241,10 @@ def generate_lineage_outputs(df, taxid_lineages_output_prefix, name_lineages_out
                     'order': -400,
                     'class': -500,
                     'phylum': -600,
-                    'superkingdom': -700}
+                    'kingdom': -700,
+                    'superkingdom': -800}
     write_output(taxid_lineages_output_prefix, "taxid lineages", taxid_lineages_df,
-                 ['tax_id', 'superkingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species'],
+                 ['tax_id', 'superkingdom', 'kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species'],
                  undef_taxids)
 
     logging.info('writing lineage-by-taxid shelf...')
