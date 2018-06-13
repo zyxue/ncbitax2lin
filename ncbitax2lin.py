@@ -155,7 +155,9 @@ def main():
     df.reset_index(drop=True, inplace=True)
     logging.info('# of tax ids: {0}'.format(df.shape[0]))
     # log summary info about the dataframe
-    df.info()
+    print('=' * 50)
+    df.info(verbose=True, memory_usage="deep")
+    print('=' * 50)
 
     # force to use global variable TAXONOMY_DICT because map doesn't allow
     # passing extra args easily
