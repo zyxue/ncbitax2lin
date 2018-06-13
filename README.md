@@ -85,6 +85,8 @@ what NCBItax2lin generates for you, and it is available on <a
 href="https://gitlab.com/zyxue/ncbitax2lin-lineages/tree/master"
 target="_blank">ncbitax2lin-lineages</a>.
 
+If you have any question about this project, please feel free to create a new
+[issue](https://github.com/zyxue/ncbitax2lin/issues/new).
 
 ## Note on `taxdump.tar.gz.md5`
 
