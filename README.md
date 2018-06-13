@@ -1,8 +1,3 @@
-# Current release of generated lineage file
-
-Available at **[https://gitlab.com/zyxue/ncbitax2lin-lineages/blob/master/lineages-2018-03-12.csv.gz](https://gitlab.com/zyxue/ncbitax2lin-lineages/blob/master/lineages-2018-03-12.csv.gz)**
-
-
 # NCBItax2lin
 
 Convert NCBI taxonomy dump (taxdump, ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/)
@@ -19,6 +14,11 @@ href="https://gitlab.com/zyxue/ncbitax2lin-lineages/tree/master"
 target="_blank">ncbitax2lin-lineages</a>, a [GitLab](https://gitlab.com/) repo,
 which allows pushing larger files without [Git LFS](https://git-lfs.github.com/)
 and a bigger repo size limit.
+
+**Current release of generated lineage file:**
+
+Available at **[https://gitlab.com/zyxue/ncbitax2lin-lineages/blob/master/lineages-2018-06-13.csv.gz](https://gitlab.com/zyxue/ncbitax2lin-lineages/blob/master/lineages-2018-06-13.csv.gz)**
+
 
 ## Regenerate the lineages yourself
 
