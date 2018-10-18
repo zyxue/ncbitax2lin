@@ -25,7 +25,7 @@ Available at **[https://gitlab.com/zyxue/ncbitax2lin-lineages/blob/master/lineag
 Regeneration is straightforward, but it may incur quite a bit of memory (~20
 GB). I generated `lineages.csv.gz` on a machine with 32 GB memory. Pull request
 on refactoring to a lower memory usage is welcome. It's mainly about
-[this line](https://github.com/zyxue/ncbitax2lin/blob/dev/ncbitax2lin.py#L184),
+[this line](https://github.com/zyxue/ncbitax2lin/blob/master/ncbitax2lin.py#L184),
 where the `pool.map` takes places.
 
 If you really need an updated version but without the hardware resources, you
