@@ -94,3 +94,7 @@ It appears that NCBI periodically regenerates `taxdump.tar.gz` and
 `taxdump.tar.gz.md5` even when its content is still the same. I am not sure how
 their regeneration works, but `taxdump.tar.gz.md5` will differ simply because 
 of a different timestamp.
+
+## Used in
+
+* Mahmoudabadi, G., & Phillips, R. (2018). A comprehensive and quantitative exploration of thousands of viral genomes. ELife, 7. https://doi.org/10.7554/eLife.31955
