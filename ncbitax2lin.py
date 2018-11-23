@@ -202,29 +202,17 @@ def main():
     lineages_csv_output = os.path.join('{0}.csv.gz'.format(args.output_prefix))
     backup_file(lineages_csv_output)
     logging.info("writing lineages to {0}".format(lineages_csv_output))
-    with open(lineages_csv_output, 'wb') as opf:
-        # make sure the name and timestamp are not gzipped, (like gzip -n)
-        opf_gz = gzip.GzipFile(
-            filename='',        # empty string because fileobj is given
-            mode='wb',          # wb doesn't seem to work sometimes
-            compresslevel=9,
-            fileobj=opf,
-            mtime=0.   # an optional numeric timestamp, set to be deterministic
-        )
-        cols = ['tax_id',
-                'superkingdom',
-                'phylum',
-                'class',
-                'order',
-                'family',
-                'genus',
-                'species']
+    cols = ['tax_id',
+            'superkingdom',
+            'phylum',
+            'class',
+            'order',
+            'family',
+            'genus',
+            'species']
+    cols_ = list(filter(lambda x: x in lineages_df.columns, cols))
+    lineages_df.to_csv(lineages_csv_output, index=False, columns=cols_, compression='gzip')
 
-        other_cols = sorted([__ for __ in lineages_df.columns
-                             if __ not in cols])
-        output_cols = cols + other_cols
-        lineages_df.to_csv(opf_gz, index=False, columns=output_cols)
-        opf_gz.close()
 
 if __name__ == "__main__":
     main()
