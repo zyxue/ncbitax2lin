@@ -17,7 +17,7 @@ and a bigger repo size limit.
 
 **Current release of generated lineage file:**
 
-Available at **[https://gitlab.com/zyxue/ncbitax2lin-lineages/blob/master/lineages-2018-06-13.csv.gz](https://gitlab.com/zyxue/ncbitax2lin-lineages/blob/master/lineages-2018-06-13.csv.gz)**
+Available at **[https://gitlab.com/zyxue/ncbitax2lin-lineages/blob/master/lineages-2019-01-07.csv.gz](https://gitlab.com/zyxue/ncbitax2lin-lineages/blob/master/lineages-2019-01-07.csv.gz)**
 
 
 ## Regenerate the lineages yourself
