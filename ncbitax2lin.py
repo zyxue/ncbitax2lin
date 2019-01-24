@@ -128,7 +128,6 @@ def to_name_dict(lineage):
         # e.g. there could be multiple 'no rank'
         numbered_rank = rank
         while numbered_rank in dd:
-            # print __, numbered_rank
             search = num_re.search(numbered_rank)
             if search is None:
                 count = 1
@@ -160,7 +159,6 @@ def to_taxid_dict(lineage):
         # e.g. there could be multiple 'no rank'
         numbered_rank = rank
         while numbered_rank in dd:
-            # print __, numbered_rank
             search = num_re.search(numbered_rank)
             if search is None:
                 count = 1
@@ -242,7 +240,6 @@ def generate_lineage_outputs(df, taxid_lineages_output_prefix, name_lineages_out
     logging.info('generating lineage-by-taxid output...')
     taxid_lineages_df = process_lineage_dd(taxid_lineages_dd)
     taxid_lineages_df.columns = taxid_lineages_df.columns.str.replace(' ', '_')
-    print(taxid_lineages_df)
     undef_taxids = {'species': -100,
                     'genus': -200,
                     'family': -300,
