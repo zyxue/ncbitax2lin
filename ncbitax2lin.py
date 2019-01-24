@@ -29,19 +29,19 @@ def parse_args():
 
     parser.add_argument(
         '-o', '--output-prefix', default='ncbi_lineages',
-        help='will output lineage name information in output_prefix.csv.gz')
+        help='will output lineage name information in [output_prefix].csv.gz')
 
     parser.add_argument(
         '--names-output-prefix', default='ncbi_names',
-        help='will output scientific-name information in names_output_prefix.csv.gz')
+        help='will output scientific-name information in [names_output_prefix].csv.gz')
 
     parser.add_argument(
         '--taxid-lineages-output-prefix', default='ncbi_taxid_lineages',
-        help='will output lineage taxon-ID information in taxid_lineages_output_prefix.csv.gz')
+        help='will output lineage taxon-ID information in [taxid_lineages_output_prefix].csv.gz')
 
     parser.add_argument(
         '--name-lineages-output-prefix', default='ncbi_name_lineages',
-        help='will output lineage name information in name_lineages_output_prefix.csv.gz')
+        help='will output lineage name information in [name_lineages_output_prefix].csv.gz')
 
     args = parser.parse_args()
     return args
@@ -201,6 +201,8 @@ def write_output(output_prefix, output_name_log, df, cols=None, undef_taxids=Non
         if undef_taxids and cols:
             for col in undef_taxids.keys():
                 df[[col]] = df[[col]].fillna(value=undef_taxids[col])
+            # filling remaing na values as 0
+            df[cols] = df[cols].fillna(0)
             df[cols] = df[cols].astype(int)
         if cols:
             df.to_csv(opf_gz, index=False, columns=cols)
@@ -217,6 +219,7 @@ def generate_name_output(nodes_df, names_file, name_class):
     df.info()
     return df
 
+@timeit
 def generate_lineage_outputs(df, taxid_lineages_output_prefix, name_lineages_output_prefix):
     global TAXONOMY_DICT # example item: (16, {'parent_tax_id': 32011, 'name_txt': 'Methylophilus', 'rank': 'genus', 'tax_id': 16})
     logging.info('generating TAXONOMY_DICT...')
@@ -231,10 +234,15 @@ def generate_lineage_outputs(df, taxid_lineages_output_prefix, name_lineages_out
 
     logging.info('generating lineage-by-name output...')
     name_lineages_df = process_lineage_dd(name_lineages_dd)
-    write_output(name_lineages_output_prefix, "name lineages", name_lineages_df)
+    name_lineages_df.columns = name_lineages_df.columns.str.replace('no rank', 'no_rank')
+    write_output(name_lineages_output_prefix, "name lineages", name_lineages_df,
+                     ['tax_id', 'superkingdom', 'kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species'] +
+                    [col for col in name_lineages_df if col.startswith('no_rank')])
 
     logging.info('generating lineage-by-taxid output...')
     taxid_lineages_df = process_lineage_dd(taxid_lineages_dd)
+    taxid_lineages_df.columns = taxid_lineages_df.columns.str.replace(' ', '_')
+    print(taxid_lineages_df)
     undef_taxids = {'species': -100,
                     'genus': -200,
                     'family': -300,
@@ -244,13 +252,14 @@ def generate_lineage_outputs(df, taxid_lineages_output_prefix, name_lineages_out
                     'kingdom': -650,
                     'superkingdom': -700}
     write_output(taxid_lineages_output_prefix, "taxid lineages", taxid_lineages_df,
-                 ['tax_id', 'superkingdom', 'kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species'],
-                 undef_taxids)
+                 ['tax_id', 'superkingdom', 'kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species'] +
+                    [col for col in taxid_lineages_df if col.startswith('no_rank')],
+                 undef_taxids=undef_taxids)
 
     logging.info('writing lineage-by-taxid shelf...')
     taxid_lineages_shelf_output = os.path.join('{0}.db'.format(taxid_lineages_output_prefix))
     d = shelve.open(taxid_lineages_shelf_output)
-    for index, row in taxid_lineages_df.iterrows():
+    for _, row in taxid_lineages_df.iterrows():
         d[str(int(row['tax_id']))] = (str(int(row['species'])), str(int(row['genus'])), str(int(row['family'])))
     d.close()
 
@@ -259,8 +268,11 @@ def main():
 
     logging.info('PART I: name outputs')
     nodes_df = load_nodes(args.nodes_file)
+    logging.info(' * get scientific names')
     scientific_df = generate_name_output(nodes_df, args.names_file, 'scientific name')
+    logging.info(' * get common names')
     common_df = generate_name_output(nodes_df, args.names_file, 'genbank common name')
+    logging.info(' * merge names')
     df = scientific_df.merge(common_df, 'left', on='tax_id', suffixes=('', '_common'))
     write_output(args.names_output_prefix, "names", df, ['tax_id', 'name_txt', 'name_txt_common'])
 
