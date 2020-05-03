@@ -1,10 +1,12 @@
+"""Utility functions"""
+
 import datetime
 import functools
 import io
 import logging
 import os
 import time
-from typing import Any, Callable, Optional
+from typing import Any, Callable
 
 import pandas as pd
 
@@ -40,7 +42,7 @@ def maybe_backup_file(filepath: str) -> None:
         while os.path.exists(backup):
             count += 1
             backup = os.path.join(dirname, f"#{basename}.{count}#")
-        logging.info(f"Backing up {filepath} to {backup}")
+        logging.info("Backing up %s to %s", filepath, backup)
         os.rename(filepath, backup)
 
 
