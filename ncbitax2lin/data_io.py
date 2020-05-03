@@ -1,5 +1,4 @@
-import gzip
-import io
+"""utility functions related to IO"""
 
 import pandas as pd
 
@@ -18,7 +17,7 @@ def load_nodes(nodes_file: str) -> pd.DataFrame:
     """
     load nodes.dmp and convert it into a pandas.DataFrame
     """
-    df = pd.read_csv(
+    df_data = pd.read_csv(
         nodes_file,
         sep="|",
         header=None,
@@ -40,11 +39,11 @@ def load_nodes(nodes_file: str) -> pd.DataFrame:
         ],
     )
 
-    # To get rid of flanking tab characters
-    df["rank"] = df["rank"].apply(strip)
-    df["embl_code"] = df["embl_code"].apply(strip)
-    df["comments"] = df["comments"].apply(strip)
-    return df
+    return df_data.assign(
+        rank=lambda df: df["rank"].apply(strip),
+        embl_code=lambda df: df["embl_code"].apply(strip),
+        comments=lambda df: df["comments"].apply(strip),
+    )
 
 
 @utils.timeit
@@ -52,23 +51,27 @@ def load_names(names_file: str) -> pd.DataFrame:
     """
     load names.dmp and convert it into a pandas.DataFrame
     """
-    df = pd.read_csv(
+    df_data = pd.read_csv(
         names_file,
         sep="|",
         header=None,
         index_col=False,
         names=["tax_id", "name_txt", "unique_name", "name_class"],
     )
-    df["name_txt"] = df["name_txt"].apply(strip)
-    df["unique_name"] = df["unique_name"].apply(strip)
-    df["name_class"] = df["name_class"].apply(strip)
 
-    sci_df = df[df["name_class"] == "scientific name"]
-    sci_df.reset_index(drop=True, inplace=True)
-    return sci_df
+    return (
+        df_data.assign(
+            name_txt=lambda df: df["name_txt"].apply(strip),
+            unique_name=lambda df: df["unique_name"].apply(strip),
+            name_class=lambda df: df["name_class"].apply(strip),
+        )
+        .loc[lambda df: df["name_class"] == "scientific name"]
+        .reset_index(drop=True)
+    )
 
 
 def read_names_and_nodes(names_file: str, nodes_file: str) -> pd.DataFrame:
+    """Reads in data from names and nodes files"""
     # data downloaded from ftp://ftp.ncbi.nih.gov/pub/taxonomy/
     # args = parse_args()
     nodes_df = load_nodes(nodes_file)
