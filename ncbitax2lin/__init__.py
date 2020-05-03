@@ -1,1 +1,3 @@
-__version__ = "2.0.1"
+"""__init__.py for this project"""
+
+__version__ = "2.0.2"
