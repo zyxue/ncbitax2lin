@@ -1,9 +1,7 @@
-import argparse
-import gzip
+"""Converts NCBI taxonomy dump into lineages"""
+
 import logging
 import multiprocessing
-import os
-import re
 from typing import Container, Dict, Iterable, List, NewType, Optional, Tuple, Union
 
 import fire
@@ -13,6 +11,9 @@ from typing_extensions import TypedDict
 from ncbitax2lin import data_io, utils
 
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s|%(levelname)s|%(message)s")
+
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class TaxUnit(TypedDict):
@@ -53,13 +54,13 @@ def calc_rank_key(rank: str, existing_ranks: Container[str]) -> str:
     # e.g. there could be multiple 'no rank'
     if rank not in existing_ranks:
         return rank
-    else:
-        count = 1
+
+    count = 1
+    numbered_rank = f"{rank}{count}"
+    while numbered_rank in existing_ranks:
+        count += 1
         numbered_rank = f"{rank}{count}"
-        while numbered_rank in existing_ranks:
-            count += 1
-            numbered_rank = f"{rank}{count}"
-        return numbered_rank
+    return numbered_rank
 
 
 def calc_taxonomy_dict(df_tax: pd.DataFrame) -> Dict[int, TaxUnit]:
@@ -68,8 +69,9 @@ def calc_taxonomy_dict(df_tax: pd.DataFrame) -> Dict[int, TaxUnit]:
 
 
 def find_lineage(tax_id: int) -> Lineage:
+    """Finds lineage for a single tax id"""
     if tax_id % 50000 == 0:
-        logging.debug("working on tax_id: {0}".format(tax_id))
+        _LOGGER.info("working on tax_id: %d", tax_id)
 
     lineage = []
     while True:
@@ -88,11 +90,11 @@ def find_lineage(tax_id: int) -> Lineage:
 
 
 def find_all_lineages(tax_ids: Iterable) -> List[Lineage]:
-    """find the lineages for all tax ids"""
+    """Finds the lineages for all tax ids"""
     ncpus = multiprocessing.cpu_count()
-    logging.info(
-        "found {0} cpus, and will use all of them to find lineages "
-        "for all tax ids".format(ncpus)
+    _LOGGER.info(
+        "found %d cpus, and will use all of them to find lineages for all tax ids",
+        ncpus,
     )
 
     with multiprocessing.Pool(ncpus) as pool:
@@ -146,7 +148,7 @@ def convert_lineage_to_dict(lineage: Lineage) -> Dict[str, Union[int, str]]:
 
 def prepare_lineages_for_output(lineages: List[Lineage]) -> pd.DataFrame:
     """prepares lineages into a dataframe for writing to disk"""
-    logging.info("Preparings all lineages into a dataframe to be written to disk ...")
+    _LOGGER.info("Preparings all lineages into a dataframe to be written to disk ...")
 
     df_out = pd.DataFrame([convert_lineage_to_dict(lineage) for lineage in lineages])
 
@@ -167,11 +169,11 @@ def taxonomy_to_lineages(
         output_prefix: output lineages will be written to output_prefix.csv.gz
     """
     df_data = data_io.read_names_and_nodes(names_file, nodes_file)
-    logging.info(f"# of tax ids: {df_data.shape[0]:,d}")
-    logging.info(f"df.info:\n{utils.collect_df_info(df_data)}")
+    _LOGGER.info("# of tax ids: %s", f"{df_data.shape[0]:,d}")
+    _LOGGER.info("df.info:\n%s", f"{utils.collect_df_info(df_data)}")
 
-    logging.info("Generating TAXONOMY_DICT ...")
-    global TAXONOMY_DICT
+    _LOGGER.info("Generating TAXONOMY_DICT ...")
+    global TAXONOMY_DICT  # pylint: disable=global-statement
     TAXONOMY_DICT = calc_taxonomy_dict(df_data)
 
     lineages = find_all_lineages(df_data.tax_id)
@@ -181,9 +183,10 @@ def taxonomy_to_lineages(
     if output is None:
         output = f"ncbi_lineages_{pd.Timestamp.utcnow().date()}.csv.gz"
     utils.maybe_backup_file(output)
-    logging.info(f"Writing lineages to {output} ...")
+    _LOGGER.info("Writing lineages to %s ...", output)
     data_io.write_lineages_to_disk(df_lineages, output)
 
 
 def main() -> None:
+    """Main function, entry point"""
     fire.Fire(taxonomy_to_lineages)
