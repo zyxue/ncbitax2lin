@@ -1,5 +1,9 @@
 ## Change Log
 
+### v2.0.2 (2020/05/02)
+
+- made pylint and mypy pass
+
 ### v2.0.1 (2020/05/02)
 
 - adopted [poetry](https://python-poetry.org/) for package management
