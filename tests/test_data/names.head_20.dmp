@@ -1,0 +1,20 @@
+1	|	all	|		|	synonym	|
+1	|	root	|		|	scientific name	|
+2	|	Bacteria	|	Bacteria <bacteria>	|	scientific name	|
+2	|	Monera	|	Monera <bacteria>	|	in-part	|
+2	|	Procaryotae	|	Procaryotae <bacteria>	|	in-part	|
+2	|	Prokaryota	|	Prokaryota <bacteria>	|	in-part	|
+2	|	Prokaryotae	|	Prokaryotae <bacteria>	|	in-part	|
+2	|	bacteria	|		|	blast name	|
+2	|	eubacteria	|		|	genbank common name	|
+2	|	prokaryote	|	prokaryote <bacteria>	|	in-part	|
+2	|	prokaryotes	|	prokaryotes <bacteria>	|	in-part	|
+6	|	Azorhizobium	|		|	scientific name	|
+6	|	Azorhizobium Dreyfus et al. 1988 emend. Lang et al. 2013	|		|	authority	|
+7	|	ATCC 43989	|	ATCC 43989 <type strain>	|	type material	|
+7	|	Azorhizobium caulinodans	|		|	scientific name	|
+7	|	Azorhizobium caulinodans Dreyfus et al. 1988	|		|	authority	|
+7	|	Azotirhizobium caulinodans	|		|	equivalent name	|
+7	|	CCUG 26647	|	CCUG 26647 <type strain>	|	type material	|
+7	|	DSM 5975	|	DSM 5975 <type strain>	|	type material	|
+7	|	IFO 14845	|	IFO 14845 <type strain>	|	type material	|

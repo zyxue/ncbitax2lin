@@ -1,21 +1,5 @@
-*.py[co]
-
-# virtualenv
-venv*
-
-taxdump/taxdump.tar.gz
-taxdump/taxdump.tar.gz.md5
-
-taxdump/taxdump/citations.dmp
-taxdump/taxdump/delnodes.dmp
-taxdump/taxdump/division.dmp
-taxdump/taxdump/gc.prt
-taxdump/taxdump/gencode.dmp
-taxdump/taxdump/merged.dmp
-taxdump/taxdump/names.dmp
-taxdump/taxdump/nodes.dmp
-taxdump/taxdump/readme.txt
-taxdump/taxdump_readme.txt
-
-# backup files
-*#
+.vscode/
+.mypy_cache/
+__pycache__/
+dist
+ncbitax2lin.egg-info/
