@@ -2,7 +2,7 @@
 name = "ncbitax2lin"
 version = "2.0.2"
 description = "A tool that converts NCBI taxonomy dump into lineages"
-authors = ["Zhuyi Xue <zhuyi@alum.utoronto.ca>"]
+authors = ["Zhuyi Xue <zhuyi.xue2013@gmail.com>"]
 readme = "README.md"
 homepage = "https://github.com/zyxue/ncbitax2lin"
 license = "MIT"
