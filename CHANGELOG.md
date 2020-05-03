@@ -1,5 +1,10 @@
 ## Change Log
 
+### v2.0.1 (2020/05/02)
+
+- adopted [poetry](https://python-poetry.org/) for package management
+- modernized the code (Python-3.7, typing, and some tests)
+
 ### v1.1 (2017/03/17)
 
 - Remove hosting converted lineages.csv.gz from the repo
