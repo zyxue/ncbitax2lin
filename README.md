@@ -1,5 +1,7 @@
 # NCBItax2lin
 
+[![Downloads](https://pepy.tech/badge/ncbitax2lin/week)](https://pepy.tech/project/ncbitax2lin/week)
+
 Convert NCBI taxonomy dump into lineages. An example for [human
 (tax_id=9606)](https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=9606)
 is like
