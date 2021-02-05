@@ -29,7 +29,7 @@ class TaxUnit(TypedDict):
     rank_name: str
 
 
-# the strings are tax_id, rank, rank_name
+# A lineage is a list of (tax_id, rank, rank_name) tuples.
 Lineage = NewType("Lineage", List[Tuple[int, str, str]])
 
 # set TAXONOMY_DICT as global variable so it can work with multiprocess.Pool
@@ -105,17 +105,17 @@ def convert_lineage_to_dict(lineage: Lineage) -> Dict[str, Union[int, str]]:
     """Converts the lineage in a list-of-tuples represetantion to a dictionary representation
 
     [
-        (tax_id1, rank1, name_txt1),
-        (tax_id2, rank2, name_txt2),
+        ("tax_id1", "rank1", "name_txt1"),
+        ("tax_id2", "rank2", "name_txt2"),
         ...
     ]
 
     becomes
 
     {
-        rank1: name_txt1,
-        rank2: name_txt2,
-        tax_id, tax_id2,   # using the last rank as the tax_id of this lineage
+        "rank1": "name_txt1",
+        "rank2": "name_txt2",
+        "tax_id": "tax_id2",   # using the last rank as the tax_id of this lineage
     }
 
     A concrete example:
@@ -129,8 +129,8 @@ def convert_lineage_to_dict(lineage: Lineage) -> Dict[str, Union[int, str]]:
 
         {
             'no rank': 'cellular organisms',
+            'superkingdom': 'Bacteria',
             'tax_id': 2,
-            'superkingdom': 'Bacteria'
         }
 
     """
