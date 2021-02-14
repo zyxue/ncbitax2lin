@@ -28,3 +28,9 @@ ncbitax2lin = "ncbitax2lin.ncbitax2lin:main"
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
+
+# https://pycqa.github.io/isort/docs/configuration/black_compatibility/
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+known_first_party = ["ncbitax2lin"]
