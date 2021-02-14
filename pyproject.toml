@@ -21,6 +21,8 @@ mypy = "^0.770"
 pylint = "^2.5.0"
 pytest = "^5.2"
 tox = "^3.21.4"
+coverage = "^5.4"
+pytest-parallel = "^0.1.0"
 
 [tool.poetry.scripts]
 ncbitax2lin = "ncbitax2lin.ncbitax2lin:main"
