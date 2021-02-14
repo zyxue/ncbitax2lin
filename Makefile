@@ -21,7 +21,7 @@ mypy: FORCE
 pylint: FORCE
 	poetry run pylint $(SRC_DIR) $(TESTS_DIR)
 
-pytest: FORCE
+test: FORCE
 	PYTHONHASHSEED=1 \
 	&& poetry run coverage run --source=$(SRC_DIR) --module pytest --durations=10 --failed-first $(1) \
 	&& poetry run coverage report --show-missing \
