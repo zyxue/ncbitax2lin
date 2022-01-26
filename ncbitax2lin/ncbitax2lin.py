@@ -2,12 +2,12 @@
 
 import logging
 import multiprocessing
-from typing import Container, Dict, Iterable, List, Optional, Union
+from typing import Dict, Iterable, List, Optional
 
 import fire
 import pandas as pd
 
-from ncbitax2lin import data_io, utils
+from ncbitax2lin import data_io, fmt, utils
 from ncbitax2lin.struct import Lineage, TaxUnit
 
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s|%(levelname)s|%(message)s")
@@ -22,29 +22,6 @@ TAXONOMY_DICT: Dict[int, TaxUnit] = {}
 
 # tax_id of first line in names.dmp: no rank
 ROOT_TAX_ID = 1
-
-
-def calc_rank_key(rank: str, existing_ranks: Container[str]) -> str:
-    """Calcluates a key for the lineage representation in a dictionary.
-
-    Defaults to the rank itself, e.g. no rank, superkingdom, phylum, etc. but
-    when a rank appears multiple times (common for "no rank" rank) in a single
-    linearge it will be numbered, e.g. no rank1, no rank2, and so on.
-
-    Args:
-        rank: e.g. no rank, superkingdom, phylum, etc.
-        existing_ranks: rank keys already existing
-    """
-    # e.g. there could be multiple 'no rank'
-    if rank not in existing_ranks:
-        return rank
-
-    count = 1
-    numbered_rank = f"{rank}{count}"
-    while numbered_rank in existing_ranks:
-        count += 1
-        numbered_rank = f"{rank}{count}"
-    return numbered_rank
 
 
 def calc_taxonomy_dict(df_tax: pd.DataFrame) -> Dict[int, TaxUnit]:
@@ -85,60 +62,6 @@ def find_all_lineages(tax_ids: Iterable) -> List[Lineage]:
         return pool.map(find_lineage, tax_ids)
 
 
-def convert_lineage_to_dict(lineage: Lineage) -> Dict[str, Union[int, str]]:
-    """Converts the lineage in a list-of-tuples represetantion to a dictionary representation
-
-    [
-        ("tax_id1", "rank1", "name_txt1"),
-        ("tax_id2", "rank2", "name_txt2"),
-        ...
-    ]
-
-    becomes
-
-    {
-        "rank1": "name_txt1",
-        "rank2": "name_txt2",
-        "tax_id": "tax_id2",   # using the last rank as the tax_id of this lineage
-    }
-
-    A concrete example:
-
-        [
-            (131567, 'no rank', 'cellular organisms'),
-            (2, 'superkingdom', 'Bacteria')
-        ]
-
-    becomes
-
-        {
-            'no rank': 'cellular organisms',
-            'superkingdom': 'Bacteria',
-            'tax_id': 2,
-        }
-
-    """
-    output: Dict[str, Union[int, str]] = {}
-    len_lineage = len(lineage)
-    for k, (tax_id, rank, rank_name) in enumerate(lineage):
-        # use the last rank of the lineage as the tax_id of the lineage
-        if k == len_lineage - 1:
-            output["tax_id"] = tax_id
-
-        rank_key = calc_rank_key(rank, output.keys())
-        output[rank_key] = rank_name
-    return output
-
-
-def prepare_lineages_for_output(lineages: List[Lineage]) -> pd.DataFrame:
-    """prepares lineages into a dataframe for writing to disk"""
-    _LOGGER.info("Preparings all lineages into a dataframe to be written to disk ...")
-
-    df_out = pd.DataFrame([convert_lineage_to_dict(lineage) for lineage in lineages])
-
-    return df_out.sort_values("tax_id")
-
-
 def taxonomy_to_lineages(
     nodes_file: str, names_file: str, output: Optional[str] = None
 ) -> None:
@@ -162,7 +85,8 @@ def taxonomy_to_lineages(
 
     lineages = find_all_lineages(df_data.tax_id)
 
-    df_lineages = prepare_lineages_for_output(lineages)
+    _LOGGER.info("Preparings all lineages into a dataframe to be written to disk ...")
+    df_lineages = fmt.prepare_lineages_for_output(lineages)
 
     if output is None:
         output = f"ncbi_lineages_{pd.Timestamp.utcnow().date()}.csv.gz"
