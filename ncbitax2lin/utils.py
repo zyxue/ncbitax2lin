@@ -6,7 +6,7 @@ import io
 import logging
 import os
 import time
-from typing import Any, Callable
+from typing import Any, Callable, List, TypeVar
 
 import pandas as pd
 
@@ -44,6 +44,14 @@ def maybe_backup_file(filepath: str) -> None:
             backup = os.path.join(dirname, f"#{basename}.{count}#")
         logging.info("Backing up %s to %s", filepath, backup)
         os.rename(filepath, backup)
+
+
+ElemType = TypeVar("ElemType")
+
+
+def partition(vals: List[ElemType], size: int) -> List[List[ElemType]]:
+    """Partion a list into a list of lists by size."""
+    return [vals[i : i + size] for i in range(0, len(vals), size)]
 
 
 def collect_df_info(df_data: pd.DataFrame) -> str:

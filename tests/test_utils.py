@@ -2,7 +2,10 @@
 # pylint: disable=protected-access, missing-function-docstring
 
 import os
+from typing import List
 from unittest.mock import MagicMock, call, patch
+
+import pytest
 
 from ncbitax2lin import utils
 
@@ -45,3 +48,20 @@ def test_maybe_backup_file_when_backfile_also_exists(
         call(test_input), call(intermediary_input), call(expected)
     )
     mock_rename.assert_called_once_with(test_input, expected)
+
+
+@pytest.mark.parametrize(
+    "test_input, size, expected",
+    [
+        ([1, 2, 3], 3, [[1, 2, 3]]),
+        ([1, 2, 3], 2, [[1, 2], [3]]),
+        ([1, 2, 3, 4], 2, [[1, 2], [3, 4]]),
+        ([1, 2, 3, 4, 5], 2, [[1, 2], [3, 4], [5]]),
+        ([1, 2, 3, 4, 5], 3, [[1, 2, 3], [4, 5]]),
+    ],
+)
+def test__partition(
+    test_input: List[int], size: int, expected: List[List[int]],
+) -> None:
+    actual = utils.partition(test_input, size)
+    assert actual == expected

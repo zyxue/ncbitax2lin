@@ -1,4 +1,5 @@
 """tests for fmt.py"""
+# pylint: disable=missing-function-docstring, protected-access
 from typing import Container
 
 import pytest
