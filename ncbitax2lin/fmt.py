@@ -1,5 +1,6 @@
 """Utilities for preparing the lineages for output."""
 
+import concurrent.futures
 from typing import Container, Dict, List, Union
 
 import pandas as pd
@@ -78,6 +79,9 @@ def _convert_lineage_to_dict(lineage: Lineage) -> Dict[str, Union[int, str]]:
 def prepare_lineages_for_output(lineages: List[Lineage]) -> pd.DataFrame:
     """prepares lineages into a dataframe for writing to disk"""
 
-    df_out = pd.DataFrame([_convert_lineage_to_dict(lineage) for lineage in lineages])
+    with concurrent.futures.ProcessPoolExecutor() as executors:
+        out = executors.map(_convert_lineage_to_dict, lineages, chunksize=5000)
+
+    df_out = pd.DataFrame(out)
 
     return df_out.sort_values("tax_id")
