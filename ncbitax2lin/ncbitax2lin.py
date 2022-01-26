@@ -2,35 +2,19 @@
 
 import logging
 import multiprocessing
-from typing import Container, Dict, Iterable, List, NewType, Optional, Tuple, Union
+from typing import Container, Dict, Iterable, List, Optional, Union
 
 import fire
 import pandas as pd
-from typing_extensions import TypedDict
 
 from ncbitax2lin import data_io, utils
+from ncbitax2lin.struct import Lineage, TaxUnit
 
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s|%(levelname)s|%(message)s")
 
 
 _LOGGER = logging.getLogger(__name__)
 
-
-class TaxUnit(TypedDict):
-    """
-    Represents a basic unit in taxonomy e.g. (phylum, Proteobacteria), where
-    phylum is the rank, and Proteobacteria is the rank name
-    """
-
-    tax_id: int
-    # tax_id of parent tax unit for this tax unit
-    parent_tax_id: int
-    rank: str
-    rank_name: str
-
-
-# A lineage is a list of (tax_id, rank, rank_name) tuples.
-Lineage = NewType("Lineage", List[Tuple[int, str, str]])
 
 # set TAXONOMY_DICT as global variable so it can work with multiprocess.Pool
 # more easily
