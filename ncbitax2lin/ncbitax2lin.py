@@ -24,7 +24,7 @@ TAXONOMY_DICT: Dict[int, TaxUnit] = {}
 ROOT_TAX_ID = 1
 
 
-def calc_taxonomy_dict(df_tax: pd.DataFrame) -> Dict[int, TaxUnit]:
+def _calc_taxonomy_dict(df_tax: pd.DataFrame) -> Dict[int, TaxUnit]:
     """Converts dataframe of df_tax into a dictionary with tax_id as the keys"""
     return dict(zip(df_tax.tax_id.values, df_tax.to_dict("records")))
 
@@ -81,7 +81,7 @@ def taxonomy_to_lineages(
 
     _LOGGER.info("Generating TAXONOMY_DICT ...")
     global TAXONOMY_DICT  # pylint: disable=global-statement
-    TAXONOMY_DICT = calc_taxonomy_dict(df_data)
+    TAXONOMY_DICT = _calc_taxonomy_dict(df_data)
 
     lineages = find_all_lineages(df_data.tax_id)
 

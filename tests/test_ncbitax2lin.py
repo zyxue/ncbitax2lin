@@ -1,4 +1,4 @@
-"""tests for data_reader.py"""
+"""tests for ncbitax2lin.py"""
 # pylint: disable=protected-access, missing-function-docstring
 
 
@@ -7,7 +7,7 @@ import pandas as pd
 from ncbitax2lin import ncbitax2lin
 
 
-def test_calc_taxonomy_dict() -> None:
+def test__calc_taxonomy_dict() -> None:
     df_data = pd.DataFrame(
         {
             "tax_id": [1, 2, 6],
@@ -17,7 +17,7 @@ def test_calc_taxonomy_dict() -> None:
         }
     )
 
-    actual = ncbitax2lin.calc_taxonomy_dict(df_data)
+    actual = ncbitax2lin._calc_taxonomy_dict(df_data)
     expected = {
         1: {"tax_id": 1, "parent_tax_id": 1, "rank": "no rank", "rank_name": "root"},
         2: {
