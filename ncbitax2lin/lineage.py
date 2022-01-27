@@ -3,6 +3,7 @@
 import logging
 import math
 import multiprocessing
+import os
 import pickle
 import tempfile
 from typing import Dict, List
@@ -85,7 +86,7 @@ def find_all_lineages(
 
     with tempfile.TemporaryDirectory(suffix="_ncbitax2lin") as tmpdir:
         for index, chunk in enumerate(tax_id_chunks):
-            tmp_output = f"/{tmpdir}/_lineages_{index}.pkl"
+            tmp_output = os.path.join(tmpdir, f"_lineages_{index}.pkl")
 
             tmp_outputs.append(tmp_output)
             proc = multiprocessing.Process(
