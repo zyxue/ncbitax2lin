@@ -74,7 +74,11 @@ def find_all_lineages(
         tax_dict: a dictionary of tax_id => tax_unit.
     """
     nprocs = _calc_num_procs()
-    _LOGGER.info("will use %d processes to find lineages for all tax ids", nprocs)
+    _LOGGER.info(
+        "will use %d processes to find lineages for all %s tax ids",
+        nprocs,
+        f"{len(tax_ids):,d}",
+    )
 
     chunk_size = _calc_chunk_size(len(tax_ids), num_chunks=nprocs)
     _LOGGER.info("chunk_size = %d", chunk_size)
