@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ncbitax2lin"
-version = "2.2.0"
+version = "2.3.0"
 description = "A tool that converts NCBI taxonomy dump into lineages"
 authors = ["Zhuyi Xue <zhuyi.xue2013@gmail.com>"]
 readme = "README.md"
