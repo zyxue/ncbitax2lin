@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ncbitax2lin"
-version = "2.2.0"
+version = "2.3.0"
 description = "A tool that converts NCBI taxonomy dump into lineages"
 authors = ["Zhuyi Xue <zhuyi.xue2013@gmail.com>"]
 readme = "README.md"
@@ -10,19 +10,19 @@ license = "MIT"
 [tool.poetry.dependencies]
 fire = "^0.3.1"
 pandas = "^1.0.3"
-python = "^3.7"
+python = "^3.7,<3.10"
 typing-extensions = "^3.7.4"
 
 [tool.poetry.dev-dependencies]
 autoflake = "^1.3.1"
-black = "^19.10b0"
+black = "^22.1.0"
+coverage = "^5.4"
 isort = "^5.7.0"
-mypy = "^0.770"
+mypy = "^0.941"
 pylint = "^2.5.0"
 pytest = "^5.2"
-tox = "^3.21.4"
-coverage = "^5.4"
 pytest-parallel = "^0.1.0"
+tox = "^3.21.4"
 
 [tool.poetry.scripts]
 ncbitax2lin = "ncbitax2lin.ncbitax2lin:main"

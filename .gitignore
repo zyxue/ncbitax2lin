@@ -1,6 +1,7 @@
 .coverage
 .vscode/
 .mypy_cache/
+.python-version
 __pycache__/
 dist
 htmlcov/

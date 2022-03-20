@@ -13,7 +13,11 @@ def test__calc_taxonomy_dict() -> None:
             "tax_id": [1, 2, 6],
             "parent_tax_id": [1, 131567, 335928],
             "rank": ["no rank", "superkingdom", "genus"],
-            "rank_name": ["root", "Bacteria", "Azorhizobium",],
+            "rank_name": [
+                "root",
+                "Bacteria",
+                "Azorhizobium",
+            ],
         }
     )
 
