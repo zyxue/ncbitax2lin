@@ -61,7 +61,9 @@ def test_maybe_backup_file_when_backfile_also_exists(
     ],
 )
 def test__partition(
-    test_input: List[int], size: int, expected: List[List[int]],
+    test_input: List[int],
+    size: int,
+    expected: List[List[int]],
 ) -> None:
     actual = utils.partition(test_input, size)
     assert actual == expected

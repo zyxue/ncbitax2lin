@@ -41,7 +41,7 @@ def taxonomy_to_lineages(
     _LOGGER.info("Generating a dictionary of taxonomy: tax_id => tax_unit ...")
     tax_dict = _calc_taxonomy_dict(df_data)
 
-    tax_dict_size_mb = sys.getsizeof(tax_dict) / 2 ** 20
+    tax_dict_size_mb = sys.getsizeof(tax_dict) / 2**20
     _LOGGER.info("size of taxonomy_dict: ~%s MB", f"{tax_dict_size_mb:.0f}")
 
     tax_ids = df_data.tax_id.to_numpy().tolist()
