@@ -10,7 +10,7 @@ license = "MIT"
 [tool.poetry.dependencies]
 fire = "^0.3.1"
 pandas = "^1.0.3"
-python = "^3.7"
+python = "^3.7,<3.10"
 typing-extensions = "^3.7.4"
 
 [tool.poetry.dev-dependencies]
