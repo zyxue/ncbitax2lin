@@ -12,7 +12,7 @@ is like
 
 ### Install
 
-ncbitax2lin requires python-3.7
+ncbitax2lin supports python-3.7, python-3.8, and python-3.9.
 
 ```
 pip install -U ncbitax2lin
