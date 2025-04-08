@@ -88,9 +88,17 @@ def read_names_and_nodes(names_file: str, nodes_file: str) -> pd.DataFrame:
 
 def write_lineages_to_disk(df_lineages: pd.DataFrame, output_path: str) -> None:
     """Gzip lineages and write them to disk"""
+    # superkingdom has been renamed to domain in
+    # https://ncbiinsights.ncbi.nlm.nih.gov/2024/06/04/changes-ncbi-taxonomy-classifications/
+    domain_col = "domain"
+
+    # For backwards compatibility with older taxdumps.
+    if "superkingdom" in df_lineages:
+        domain_col = "superkingdom"
+
     cols = [
         "tax_id",
-        "superkingdom",
+        domain_col,
         "phylum",
         "class",
         "order",
