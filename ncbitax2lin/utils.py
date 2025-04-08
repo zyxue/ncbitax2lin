@@ -46,7 +46,7 @@ def maybe_backup_file(filepath: str) -> None:
         os.rename(filepath, backup)
 
 
-ElemType = TypeVar("ElemType")
+ElemType = TypeVar("ElemType")  # pylint: disable=invalid-name
 
 
 def partition(vals: List[ElemType], size: int) -> List[List[ElemType]]:
