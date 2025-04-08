@@ -99,6 +99,7 @@ def write_lineages_to_disk(df_lineages: pd.DataFrame, output_path: str) -> None:
         "species",
     ]
     other_cols = sorted([col for col in df_lineages.columns if col not in cols])
+    cols = ["domain" if col == "superkingdom" and "domain" in other_cols else col for col in cols]
     output_cols = cols + other_cols
 
     df_lineages.to_csv(
