@@ -87,5 +87,5 @@ make all
 
 ```
 poetry version [minor/major etc.]
-poetry publish --build
+poetry publish --build -u __token__ --password pypi-<token-from-pypi>
 ```
