@@ -18,6 +18,12 @@ ncbitax2lin supports python-3.9 to python-3.13.
 pip install -U ncbitax2lin
 ```
 
+It is also available in Conda on the Bioconda channel:
+
+```
+conda install bioconda::ncbitax2lin
+```
+
 ### Generate lineages
 
 First download taxonomy dump from NCBI:
