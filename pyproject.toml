@@ -9,8 +9,8 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 fire = "^0.3.1"
-pandas = "^1.0.3"
-python = "^3.8,<3.14"
+pandas = "^2.3.2"
+python = "^3.9,<3.14"
 typing-extensions = "^3.7.4"
 
 [tool.poetry.dev-dependencies]
@@ -20,7 +20,7 @@ coverage = "^7.5.4"
 isort = "^5.7.0"
 mypy = "^0.941"
 pylint = "^2.5.0"
-pytest = "^5.2"
+pytest = "^8.4.2"
 pytest-parallel = "^0.1.0"
 tox = "^3.21.4"
 
