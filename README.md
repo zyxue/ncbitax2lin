@@ -72,8 +72,7 @@ of a different timestamp.
 ### Install dependencies
 
 ```
-poetry shell
-poetry install
+poetry install --sync
 ```
 
 ### Testing
