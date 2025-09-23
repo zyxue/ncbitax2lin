@@ -1,6 +1,6 @@
 ## Change Log
 
-### v3.0.0 (2022/09/23)
+### v3.0.0 (2025/09/23)
 
 - Fixed https://github.com/zyxue/ncbitax2lin/issues/31
 - Upgraded dependencies and support py39 to py313 instead.
