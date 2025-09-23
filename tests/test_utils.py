@@ -1,4 +1,5 @@
 """tests for utils.py"""
+
 # pylint: disable=protected-access, missing-function-docstring
 
 import os
@@ -28,7 +29,7 @@ def test_maybe_backup_file_when_file_path_exists(
     utils.maybe_backup_file(test_input)
     expected = "#some_existing_file.1#"
 
-    assert mock_exists.has_calls(call(test_input), call(expected))
+    mock_exists.assert_has_calls([call(test_input), call(expected)])
     mock_rename.assert_called_once_with(test_input, expected)
 
 
@@ -44,8 +45,8 @@ def test_maybe_backup_file_when_backfile_also_exists(
     utils.maybe_backup_file(test_input)
     expected = "#some_existing_file.2#"
 
-    assert mock_exists.has_calls(
-        call(test_input), call(intermediary_input), call(expected)
+    mock_exists.assert_has_calls(
+        [call(test_input), call(intermediary_input), call(expected)]
     )
     mock_rename.assert_called_once_with(test_input, expected)
 
