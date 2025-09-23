@@ -1,2 +1,2 @@
 [MESSAGES CONTROL]
-disable=bad-continuation, fixme, duplicate-code
+disable=fixme, duplicate-code

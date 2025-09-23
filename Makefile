@@ -29,4 +29,4 @@ test: FORCE
 
 lint: black isort mypy pylint
 
-all: lint pytest
+all: lint test

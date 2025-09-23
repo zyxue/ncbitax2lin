@@ -21,7 +21,7 @@ def timeit(func: Callable[..., Any]) -> Callable[..., Any]:
         """Returns the timed function"""
         start_time = time.time()
         result = func(*args, **kwargs)
-        elapsed_time = datetime.timedelta(seconds=(time.time() - start_time))
+        elapsed_time = datetime.timedelta(seconds=time.time() - start_time)
         _LOGGER.info("time spent on %s: %s", func.__name__, elapsed_time)
         return result
 
