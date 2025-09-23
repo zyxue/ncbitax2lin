@@ -86,5 +86,7 @@ make all
 
 ```
 poetry version [minor/major etc.]
+git tag vx.y.z
+git push origin vx.y.z
 poetry publish --build -u __token__ --password pypi-<token-from-pypi>
 ```
