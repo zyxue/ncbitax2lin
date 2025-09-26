@@ -72,6 +72,7 @@ of a different timestamp.
 * Schenberger Santos, A. R. et al. (2020) NAD+ biosynthesis in bacteria is controlled by global carbon/ nitrogen levels via PII signaling, Journal of Biological Chemistry, 295(18), pp. 6165–6176. doi: 10.1074/jbc.RA120.012793. https://www.sciencedirect.com/science/article/pii/S0021925817482433
 * Villada, J. C., Duran, M. F. and Lee, P. K. H. (2020) Interplay between Position-Dependent Codon Usage Bias and Hydrogen Bonding at the 5' End of ORFeomes, mSystems, 5(4), pp. 1–18. doi: 10.1128/msystems.00613-20. https://msystems.asm.org/content/5/4/e00613-20
 * Byadgi, O. et al. (2020) Transcriptome analysis of amyloodinium ocellatum tomonts revealed basic information on the major potential virulence factors, Genes, 11(11), pp. 1–12. doi: 10.3390/genes11111252. https://www.mdpi.com/2073-4425/11/11/1252
+* Cumbo, F., & Blankenberg, D. (2025). Characterization of microbial dark matter at scale with MetaSBT and taxonomy-aware Sequence Bloom Trees. bioRxiv. https://doi.org/10.1101/2025.08.25.672238
 
 ## Development
 
